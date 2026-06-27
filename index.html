@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Death and Taxes — C.O.P.E. Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --yellow-bg: #D4FF00;
+    --yellow-text: #CCFF00;
+    --black: #000;
+    --mono: 'Press Start 2P', monospace;
+    --fs: 10px;
+    --fs-sm: 7px;
+  }
+  body { background: var(--black); color: var(--yellow-text); font-family: var(--mono); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  .header-outer { background: var(--yellow-bg); }
+  header { background: var(--yellow-bg); color: var(--black); padding: 20px 24px 24px; max-width: 680px; margin: 0 auto; }
+
+  .logo { font-size: 14px; letter-spacing: 3px; margin-bottom: 10px; }
+  .subtitle { font-size: 9px; color: var(--black); line-height: 2; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--black); }
+
+  .header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+  .header-label { font-size: var(--fs-sm); color: #333; letter-spacing: 1px; text-transform: uppercase; line-height: 2; }
+  .header-input-wrap { display: flex; align-items: baseline; gap: 6px; }
+  .header-input {
+    background: none; border: none;
+    color: var(--black); font-family: var(--mono); font-size: var(--fs);
+    width: 160px; text-align: right; outline: none; padding: 0 0 2px 0;
+  }
+  .header-input:focus { outline: none; }
+  .header-unit { font-size: var(--fs-sm); color: #333; }
+
+  .err-box { border: 1px solid #cc0000; color: #cc0000; font-size: var(--fs-sm); padding: 10px 12px; margin-bottom: 14px; display: none; line-height: 2; }
+
+  /* slider section — only divider in yellow area */
+  .slider-wrap { margin-top: 16px; padding-top: 0; }
+  .slider-counters { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
+  .sc-group { text-align: center; }
+  .sc-group.left { text-align: left; }
+  .sc-group.right { text-align: right; }
+  .sc-label { font-size: var(--fs-sm); color: #333; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; line-height: 2; }
+  .sc-val { font-size: var(--fs); color: var(--black); }
+
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: rgba(0,0,0,0.25); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--black); cursor: pointer; }
+
+  /* ── RESULTS ── */
+  main { max-width: 680px; margin: 0 auto; padding: 24px; }
+
+  .groups { display: grid; grid-template-columns: 1fr; gap: 0; }
+
+  .group-card { padding: 20px 0; }
+  .group-card + .group-card { border-top: 1px solid var(--yellow-text); }
+
+  .group-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+  .group-name { font-size: var(--fs-sm); letter-spacing: 2px; text-transform: uppercase; color: var(--yellow-text); }
+  .group-count { font-size: var(--fs-sm); color: #555; }
+
+  .group-line { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; font-size: var(--fs-sm); }
+  .group-line:last-child { margin-bottom: 0; }
+  .group-line .gl { color: #555; letter-spacing: 1px; text-transform: uppercase; line-height: 2; }
+  .group-line .gv { color: var(--yellow-text); }
+  .group-line .equiv { color: var(--yellow-text); font-size: var(--fs-sm); margin-right: 5px; }
+
+  .group-total { margin-top: 14px; display: flex; justify-content: space-between; align-items: baseline; }
+  .group-total .tl { font-size: var(--fs-sm); color: #555; letter-spacing: 1px; text-transform: uppercase; }
+  .group-total .tv { font-size: var(--fs); color: var(--yellow-text); }
+
+  .warn { font-size: var(--fs-sm); color: #ff4444; margin-top: 16px; letter-spacing: 1px; line-height: 2; }
+
+  footer { text-align: center; font-size: var(--fs-sm); color: #444; padding: 24px; border-top: 1px solid #222; margin-top: 8px; line-height: 2; }
+  footer a { color: var(--yellow-text); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="header-outer">
+<header>
+  <div class="logo">DEATH AND TAXES</div>
+  <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.) TOOL</div>
+  <div class="header-row">
+    <span class="header-label">Citizens remaining</span>
+    <input class="header-input" type="number" id="pop-input" min="70" step="1" placeholder="—">
+  </div>
+  <div class="header-row">
+    <span class="header-label">Treasury</span>
+    <div class="header-input-wrap">
+      <input class="header-input" type="number" id="eth-input" min="0" step="0.1" placeholder="—">
+      <span class="header-unit">ETH</span>
+    </div>
+  </div>
+  <div class="header-row">
+    <span class="header-label">1/69 citizen value</span>
+    <div class="header-input-wrap">
+      <input class="header-input" type="number" id="citizenVal" value="3" min="0" step="0.1">
+      <span class="header-unit">ETH</span>
+    </div>
+  </div>
+  <div class="err-box" id="err-box"><span id="err-msg"></span></div>
+  <div class="slider-wrap">
+    <div class="slider-counters">
+      <div class="sc-group left">
+        <div class="sc-label">Participating</div>
+        <div class="sc-val" id="sc-part">—</div>
+      </div>
+      <div class="sc-group right">
+        <div class="sc-label">Not participating</div>
+        <div class="sc-val" id="sc-np">35</div>
+      </div>
+    </div>
+    <input type="range" id="nonpart-slider" min="0" max="68" value="33" step="1">
+  </div>
+</header>
+</div>
+
+<main>
+  <div class="groups" id="groups"></div>
+  <div id="warn-box"></div>
+</main>
+
+<footer>
+  BUILT BY <a href="https://x.com/_smartie118" target="_blank">_SMARTIE</a>
+</footer>
+
+<script>
+const TREASURY_WALLET = '0x8e829e09965f7986b2449864ff00b06458601c2f';
+const CONTRACT        = '0x4f249b2dc6cecbd549a0c354bbfc4919e8c5d3ae';
+const TARGET = 69;
+const RPCS = ['https://eth.llamarpc.com','https://rpc.ankr.com/eth','https://cloudflare-eth.com','https://ethereum.publicnode.com'];
+
+async function rpcCall(url, method, params) {
+  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.result;
+}
+async function tryRpcs(method, params) {
+  for (const rpc of RPCS) { try { return await rpcCall(rpc, method, params); } catch(e) { continue; } }
+  throw new Error('All RPC endpoints failed');
+}
+
+async function fetchChain() {
+  document.getElementById('err-box').style.display = 'none';
+  let errors = [];
+  let eth = null, pop = null;
+  try { eth = parseInt(await tryRpcs('eth_getBalance', [TREASURY_WALLET, 'latest']), 16) / 1e18; } catch(e) { errors.push('treasury'); }
+  try { pop = parseInt(await tryRpcs('eth_call', [{ to: CONTRACT, data: '0x18160ddd' }, 'latest']), 16); } catch(e) { errors.push('population'); }
+  if (errors.length) {
+    document.getElementById('err-box').style.display = 'block';
+    document.getElementById('err-msg').textContent = '⚠ Could not fetch: ' + errors.join(', ') + '. Enter values manually.';
+  }
+  if (pop !== null) document.getElementById('pop-input').value = pop;
+  if (eth !== null) document.getElementById('eth-input').value = eth.toFixed(3);
+  calc();
+}
+
+function getPop()      { const v = parseFloat(document.getElementById('pop-input').value); return (!isNaN(v) && v > 0) ? Math.round(v) : null; }
+function getTreasury() { const v = parseFloat(document.getElementById('eth-input').value); return (!isNaN(v) && v >= 0) ? v : null; }
+function fE(n, dp=4)   { return n === null || n === undefined ? '—' : n.toFixed(dp) + ' ETH'; }
+
+function calc() {
+  const pop        = getPop();
+  const treasury   = getTreasury();
+  const citizenVal = parseFloat(document.getElementById('citizenVal').value) || 0;
+  const sliderVal  = parseInt(document.getElementById('nonpart-slider').value) || 0;
+  const numNP      = 68 - sliderVal;
+
+  if (pop === null) {
+    document.getElementById('sc-part').textContent  = '—';
+    document.getElementById('sc-np').textContent    = numNP;
+    document.getElementById('groups').innerHTML = '';
+    return;
+  }
+
+  const numPart         = pop - numNP;
+  const totalSacrifice  = pop - TARGET;
+  const partKeeperSlots = TARGET - numNP;
+  const partSacrifice   = totalSacrifice;
+
+  const nonPartETH     = treasury !== null ? treasury / TARGET : null;
+  const nonPartTotal   = nonPartETH !== null ? nonPartETH + citizenVal : null;
+  const treasuryUsedNP = nonPartETH !== null ? nonPartETH * numNP : null;
+  const remainTreasury = treasury !== null ? treasury - (treasuryUsedNP ?? 0) : null;
+  const partPool       = remainTreasury !== null ? remainTreasury + (partKeeperSlots * citizenVal) : null;
+  const partShare      = (partPool !== null && numPart > 0) ? partPool / numPart : null;
+
+  const sacrificerTotal = partShare;
+  const keeperETHCash   = partShare !== null ? partShare - citizenVal : null;
+  const keeperOverflow  = keeperETHCash !== null && keeperETHCash < 0;
+  const keeperETHActual = keeperOverflow ? 0 : keeperETHCash;
+  const keeperTotal     = keeperOverflow ? citizenVal : partShare;
+
+  document.getElementById('sc-part').textContent  = numPart;
+  document.getElementById('sc-np').textContent    = numNP;
+
+  let html = '';
+  if (numNP > 0) {
+    html += `
+    <div class="group-card">
+      <div class="group-header">
+        <span class="group-name">Non-participants</span>
+        <span class="group-count">${numNP} citizens</span>
+      </div>
+      <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(nonPartETH,4)}</span></div>
+      <div class="group-line"><span class="gl">Citizen</span><span class="gv"><span class="equiv">equivalent</span> ${citizenVal} ETH</span></div>
+      <div class="group-total">
+        <span class="tl">Total each</span>
+        <span class="tv">${fE(nonPartTotal,4)}</span>
+      </div>
+    </div>`;
+  }
+
+  html += `
+    <div class="group-card">
+      <div class="group-header">
+        <span class="group-name">Participant keepers</span>
+        <span class="group-count">${partKeeperSlots} citizens</span>
+      </div>
+      <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(keeperETHActual,4)}</span></div>
+      <div class="group-line"><span class="gl">Citizen</span><span class="gv"><span class="equiv">equivalent</span> ${citizenVal} ETH</span></div>
+      <div class="group-total">
+        <span class="tl">Total each</span>
+        <span class="tv">${fE(keeperTotal,4)}</span>
+      </div>
+    </div>
+    <div class="group-card">
+      <div class="group-header">
+        <span class="group-name">Participant sacrificers</span>
+        <span class="group-count">${partSacrifice} citizens</span>
+      </div>
+      <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(sacrificerTotal,4)}</span></div>
+      <div class="group-line"><span class="gl">Citizen</span><span class="gv">sacrificed</span></div>
+      <div class="group-total">
+        <span class="tl">Total each</span>
+        <span class="tv">${fE(sacrificerTotal,4)}</span>
+      </div>
+    </div>`;
+
+  document.getElementById('groups').innerHTML = html;
+  document.getElementById('warn-box').innerHTML = keeperOverflow
+    ? `<div class="warn">⚠ CITIZEN VALUE (${citizenVal} ETH) EXCEEDS SACRIFICER PAYOUT (${fE(partShare,4)}). KEEPERS RECEIVE CITIZEN ONLY — MORE TOTAL VALUE THAN SACRIFICERS.</div>`
+    : '';
+}
+
+['pop-input','eth-input','citizenVal'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+document.getElementById('nonpart-slider').addEventListener('input', calc);
+
+fetchChain();
+</script>
+</body>
+</html>
