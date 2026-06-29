@@ -19,11 +19,22 @@
 
   /* ── HEADER ── */
   .header-outer { background: var(--yellow-bg); }
-  header { background: var(--yellow-bg); color: var(--black); padding: 20px 24px 24px; max-width: 680px; margin: 0 auto; }
-
+  header { background: var(--yellow-bg); color: var(--black); padding: 20px 24px 0; max-width: 680px; margin: 0 auto; }
   .logo { font-size: 14px; letter-spacing: 3px; margin-bottom: 10px; }
   .subtitle { font-size: 9px; color: var(--black); line-height: 2; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--black); }
 
+  /* ── TABS ── */
+  .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--black); margin-top: 20px; }
+  .tab-btn {
+    font-family: var(--mono); font-size: var(--fs-sm); padding: 10px 16px;
+    background: none; border: none; color: var(--black); cursor: pointer;
+    letter-spacing: 1px; opacity: 0.4; border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--black); }
+
+  /* ── COPE TOOL INPUTS ── */
+  .cope-inputs { padding: 20px 0 24px; }
   .header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
   .header-label { font-size: var(--fs-sm); color: #333; letter-spacing: 1px; text-transform: uppercase; line-height: 2; }
   .header-input-wrap { display: flex; align-items: baseline; gap: 6px; }
@@ -34,10 +45,7 @@
   }
   .header-input:focus { outline: none; }
   .header-unit { font-size: var(--fs-sm); color: #333; }
-
   .err-box { border: 1px solid #cc0000; color: #cc0000; font-size: var(--fs-sm); padding: 10px 12px; margin-bottom: 14px; display: none; line-height: 2; }
-
-  /* slider section — only divider in yellow area */
   .slider-wrap { margin-top: 16px; padding-top: 0; }
   .slider-counters { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
   .sc-group { text-align: center; }
@@ -45,33 +53,66 @@
   .sc-group.right { text-align: right; }
   .sc-label { font-size: var(--fs-sm); color: #333; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; line-height: 2; }
   .sc-val { font-size: var(--fs); color: var(--black); }
-
   input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: rgba(0,0,0,0.25); outline: none; cursor: pointer; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--black); cursor: pointer; }
 
   /* ── RESULTS ── */
   main { max-width: 680px; margin: 0 auto; padding: 24px; }
-
   .groups { display: grid; grid-template-columns: 1fr; gap: 0; }
-
   .group-card { padding: 20px 0; }
   .group-card + .group-card { border-top: 1px solid var(--yellow-text); }
-
   .group-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
   .group-name { font-size: var(--fs-sm); letter-spacing: 2px; text-transform: uppercase; color: var(--yellow-text); }
   .group-count { font-size: var(--fs-sm); color: #555; }
-
   .group-line { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; font-size: var(--fs-sm); }
   .group-line:last-child { margin-bottom: 0; }
   .group-line .gl { color: #555; letter-spacing: 1px; text-transform: uppercase; line-height: 2; }
   .group-line .gv { color: var(--yellow-text); }
   .group-line .equiv { color: var(--yellow-text); font-size: var(--fs-sm); margin-right: 5px; }
-
   .group-total { margin-top: 14px; display: flex; justify-content: space-between; align-items: baseline; }
   .group-total .tl { font-size: var(--fs-sm); color: #555; letter-spacing: 1px; text-transform: uppercase; }
   .group-total .tv { font-size: var(--fs); color: var(--yellow-text); }
-
   .warn { font-size: var(--fs-sm); color: #ff4444; margin-top: 16px; letter-spacing: 1px; line-height: 2; }
+
+  /* ── MANIFESTO / SCENARIOS ── */
+  .content-panel { max-width: 680px; margin: 0 auto; padding: 32px 24px; display: none; }
+  .content-panel.active { display: block; }
+  .cope-panel { display: none; }
+  .cope-panel.active { display: block; }
+
+  .section-title { font-size: 8px; letter-spacing: 3px; color: var(--yellow-text); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #333; }
+  .m-block { margin-bottom: 28px; }
+  .m-label { font-size: var(--fs-sm); color: #555; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; line-height: 2; }
+  .m-text { font-size: var(--fs-sm); line-height: 2.4; color: var(--yellow-text); }
+  .m-divider { border: none; border-top: 1px solid #222; margin: 24px 0; }
+  .m-subheading { font-size: 8px; letter-spacing: 2px; color: var(--yellow-bg); margin-bottom: 24px; margin-top: 8px; }
+
+  .pill { display: inline-block; font-size: 6px; padding: 3px 8px; border: 1px solid; margin-right: 6px; letter-spacing: 1px; }
+  .pill-keep { border-color: var(--yellow-text); color: var(--yellow-text); }
+  .pill-sac { border-color: #ff4444; color: #ff4444; }
+  .pill-either { border-color: #555; color: #555; }
+
+  .period-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .period-table th { font-size: 6px; color: #444; letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 8px 12px; border-bottom: 1px solid #333; background: #0a0a0a; }
+  .period-table th:not(:first-child) { text-align: right; }
+  .period-table td { font-size: 6px; padding: 10px 12px; border-bottom: 1px solid #1a1a1a; line-height: 2; }
+  .period-table td:first-child { color: #888; }
+  .period-table td:nth-child(2) { color: var(--yellow-text); font-size: 8px; text-align: right; }
+  .period-table td:nth-child(3) { color: #ccc; text-align: right; }
+  .period-table td:nth-child(4) { color: #ccc; text-align: right; }
+  .period-table tr:nth-child(odd) td { background: #080808; }
+  .period-table tr:nth-child(even) td { background: #050505; }
+  .period-table tr:last-child td { border-bottom: none; }
+
+  .scenario-card { border: 1px solid #333; padding: 16px; margin-bottom: 16px; }
+  .scenario-title { font-size: var(--fs-sm); color: var(--yellow-bg); letter-spacing: 2px; margin-bottom: 14px; line-height: 2; }
+  .s-line { display: flex; justify-content: space-between; font-size: 6px; margin-bottom: 8px; gap: 12px; }
+  .s-line .sl { color: #555; letter-spacing: 1px; line-height: 2; flex-shrink: 0; }
+  .s-line .sv { color: var(--yellow-text); line-height: 2; text-align: right; }
+  .outcome-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid #222; }
+  .outcome-label { font-size: 6px; color: #444; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+  .outcome-item { font-size: 6px; color: var(--yellow-text); line-height: 2.2; }
+  .warn-text { font-size: 6px; color: #ff4444; line-height: 2.2; margin-top: 10px; }
 
   footer { text-align: center; font-size: var(--fs-sm); color: #444; padding: 24px; border-top: 1px solid #222; margin-top: 8px; line-height: 2; }
   footer a { color: var(--yellow-text); text-decoration: none; }
@@ -80,48 +121,250 @@
 <body>
 
 <div class="header-outer">
-<header>
-  <div class="logo">DEATH AND TAXES</div>
-  <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.) TOOL</div>
-  <div class="header-row">
-    <span class="header-label">Citizens remaining</span>
-    <input class="header-input" type="number" id="pop-input" min="70" step="1" placeholder="—">
-  </div>
-  <div class="header-row">
-    <span class="header-label">Treasury</span>
-    <div class="header-input-wrap">
-      <input class="header-input" type="number" id="eth-input" min="0" step="0.1" placeholder="—">
-      <span class="header-unit">ETH</span>
-    </div>
-  </div>
-  <div class="header-row">
-    <span class="header-label">1/69 citizen value</span>
-    <div class="header-input-wrap">
-      <input class="header-input" type="number" id="citizenVal" value="3" min="0" step="0.1">
-      <span class="header-unit">ETH</span>
-    </div>
-  </div>
-  <div class="err-box" id="err-box"><span id="err-msg"></span></div>
-  <div class="slider-wrap">
-    <div class="slider-counters">
-      <div class="sc-group left">
-        <div class="sc-label">Participating</div>
-        <div class="sc-val" id="sc-part">—</div>
-      </div>
-      <div class="sc-group right">
-        <div class="sc-label">Not participating</div>
-        <div class="sc-val" id="sc-np">35</div>
-      </div>
-    </div>
-    <input type="range" id="nonpart-slider" min="0" max="68" value="33" step="1">
-  </div>
-</header>
+  <header>
+    <div class="logo">DEATH AND TAXES</div>
+    <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.) TOOL</div>
+    <nav class="tab-nav">
+      <button class="tab-btn active" onclick="showTab('manifesto')">MANIFESTO</button>
+      <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
+      <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
+    </nav>
+  </header>
 </div>
 
-<main>
-  <div class="groups" id="groups"></div>
-  <div id="warn-box"></div>
-</main>
+<!-- ── COPE TOOL ── -->
+<div id="panel-cope" class="cope-panel active">
+  <div style="background: var(--yellow-bg);">
+    <div style="max-width: 680px; margin: 0 auto; padding: 0 24px 24px;">
+      <div class="cope-inputs">
+        <div class="header-row">
+          <span class="header-label">Citizens remaining</span>
+          <input class="header-input" type="number" id="pop-input" min="70" step="1" placeholder="—">
+        </div>
+        <div class="header-row">
+          <span class="header-label">Treasury</span>
+          <div class="header-input-wrap">
+            <input class="header-input" type="number" id="eth-input" min="0" step="0.1" placeholder="—">
+            <span class="header-unit">ETH</span>
+          </div>
+        </div>
+        <div class="header-row">
+          <span class="header-label">1/69 citizen value</span>
+          <div class="header-input-wrap">
+            <input class="header-input" type="number" id="citizenVal" value="3" min="0" step="0.1">
+            <span class="header-unit">ETH</span>
+          </div>
+        </div>
+        <div class="err-box" id="err-box"><span id="err-msg"></span></div>
+        <div class="slider-wrap">
+          <div class="slider-counters">
+            <div class="sc-group left">
+              <div class="sc-label">Participating</div>
+              <div class="sc-val" id="sc-part">—</div>
+            </div>
+            <div class="sc-group right">
+              <div class="sc-label">Not participating</div>
+              <div class="sc-val" id="sc-np">35</div>
+            </div>
+          </div>
+          <input type="range" id="nonpart-slider" min="0" max="68" value="33" step="1">
+        </div>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div class="groups" id="groups"></div>
+    <div id="warn-box"></div>
+  </main>
+</div>
+
+<!-- ── MANIFESTO ── -->
+<div id="panel-manifesto" class="content-panel">
+  <div class="section-title">THE COLLECTIVE SETTLEMENT</div>
+
+  <div class="m-block">
+    <div class="m-label">What is this?</div>
+    <div class="m-text">Death and Taxes is a game of survival. Citizens die. The last 69 standing share the treasury. But what if you could negotiate your fate instead of waiting for the taxman?</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">The offer</div>
+    <div class="m-text">The C.O.P.E. settlement contract lets a group of citizens agree to resolve the game together — before the natural end. You deposit your citizen NFT, state your role, and collectively decide who lives and who is left to die. In return, everyone in the settlement gets a guaranteed share of the treasury.</div>
+  </div>
+
+  <hr class="m-divider">
+
+  <div class="m-subheading">JOINING THE SETTLEMENT</div>
+
+  <div class="m-block">
+    <div class="m-label">How to join</div>
+    <div class="m-text">Transfer your citizen NFT into the settlement contract. Your taxes must be current at the time of deposit. Once in, you state your preferred role.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">Your role</div>
+    <div class="m-text">
+      <span class="pill pill-keep">KEEPER</span> you want to survive and keep your citizen NFT. Only available when keeper slots are open.<br><br>
+      <span class="pill pill-sac">SACRIFICER</span> you are willing to be left to die, receiving an evader NFT and your treasury share.<br><br>
+      <span class="pill pill-either">EITHER</span> you are happy with whichever role is needed. Keeper spots are filled first — by explicit keepers first, then either players, in order of deposit date. If keeper slots are full when you join, only sacrificer or either are available.
+    </div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">Changing your mind</div>
+    <div class="m-text">You can update your role preference while the contract is open. Be aware — changing your preference resets your position in the keeper queue entirely. Your deposit timestamp resets to the time of change and you lose any period-based keeper eligibility you had built up. This cannot be undone.</div>
+  </div>
+
+  <hr class="m-divider">
+
+  <div class="m-subheading">HOW THE CONTRACT RESOLVES</div>
+
+  <div class="m-block">
+    <div class="m-label">Filling periods</div>
+    <div class="m-text">The contract runs for a maximum of 21 days across seven filling periods. Each period has a participant target. If that target is reached, the contract locks and resolves immediately — no further action needed. If a period expires without hitting its target, the contract advances to the next period. All existing participants carry forward automatically and their position is preserved.</div>
+  </div>
+
+  <table class="period-table">
+    <tr>
+      <th>Period</th>
+      <th>Target</th>
+      <th>Duration</th>
+      <th>Days</th>
+    </tr>
+    <tr><td>1</td><td>55</td><td>6 days</td><td>1–6</td></tr>
+    <tr><td>2</td><td>69</td><td>4 days</td><td>7–10</td></tr>
+    <tr><td>3</td><td>80</td><td>3 days</td><td>11–13</td></tr>
+    <tr><td>4</td><td>85</td><td>2 days</td><td>14–15</td></tr>
+    <tr><td>5</td><td>90</td><td>2 days</td><td>16–17</td></tr>
+    <tr><td>6</td><td>95</td><td>1 day</td><td>18</td></tr>
+    <tr><td>7</td><td>100</td><td>3 days</td><td>19–21</td></tr>
+  </table>
+
+  <div class="m-block">
+    <div class="m-label">Why join early?</div>
+    <div class="m-text">Joining in an earlier period has two advantages. First, you are first in the keeper queue — earlier deposits take keeper slots before later ones. Second, if a tax bailout is agreed with m0dest, tax protection begins from the day you deposit. The earlier you join, the more tax-free days you receive.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">Later periods mean better payouts</div>
+    <div class="m-text">Higher participant targets mean more sacrificers, which means a larger shared pool and a higher payout per participant. Participants who joined in earlier periods carry forward and benefit from this increase. You commit early at lower odds, and gain if the pool grows around you.</div>
+  </div>
+
+  <hr class="m-divider">
+
+  <div class="m-block">
+    <div class="m-label">Keeper slots</div>
+    <div class="m-text">Keeper slots are calculated live: 69 minus the number of citizens not in the settlement. As more citizens die in the main game, keeper slots increase. They never decrease. Keeper slots are allocated first to participants who selected keeper in the earliest period that slots were available, then to either players in deposit order. If you change your preference, you lose your place and must rejoin the queue from the current period.</div>
+  </div>
+
+  <hr class="m-divider">
+
+  <div class="m-block">
+    <div class="m-label">Retroactive threshold vote</div>
+    <div class="m-text">At any point in a later period, if the participant count already meets or exceeds a previous period's target, participants can vote on-chain to resolve at that lower threshold. Each vote resets at 00:00 UTC daily. If enough participants vote yes to meet the threshold, the contract resolves immediately. Those who did not vote yes are reclassified as non-participants — their NFTs are returned and they claim a full treasury share as normal survivors. At the point of voting you confirm your role — keeper eligibility follows the same period rules as normal.</div>
+  </div>
+
+  <hr class="m-divider">
+
+  <div class="m-subheading">AFTER THE LOCK</div>
+
+  <div class="m-block">
+    <div class="m-label">How resolution works</div>
+    <div class="m-text">Once the contract locks — either by hitting a period target or a successful vote — no new deposits are accepted. Sacrificers remain exposed to the game's kill function and will be burned in due course. Keeper NFTs are protected during this waiting period. Once total citizen supply reaches 69, the settlement pulls each NFT's share of the main treasury and distributes — ETH and citizen NFTs returned to keepers, ETH and evader NFTs forwarded to sacrificers.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">Tax bailout</div>
+    <div class="m-text">We are seeking to agree with m0dest that all citizens deposited into the settlement contract will be granted a tax bailout for its duration. If agreed, participating citizens will not accrue tax obligations while the contract is active.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">If collective agreement cannot be found</div>
+    <div class="m-text">If after 21 days no period target has been met, the contract closes. All citizen NFTs are returned to their original wallets.</div>
+  </div>
+</div>
+
+<!-- ── SCENARIOS ── -->
+<div id="panel-scenarios" class="content-panel">
+  <div class="section-title">EXAMPLE SCENARIOS</div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 01 — PERIOD 1 AUTO-RESOLVES</div>
+    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
+    <div class="s-line"><span class="sl">Day</span><span class="sv">4 (period 1, target 55)</span></div>
+    <div class="s-line"><span class="sl">Participants deposited</span><span class="sv">55</span></div>
+    <div class="s-line"><span class="sl">Keeper slots available</span><span class="sv">13 (69 − 56 non-participants)</span></div>
+    <div class="s-line"><span class="sl">Keeper preference</span><span class="sv">10 citizens — all take a slot</span></div>
+    <div class="s-line"><span class="sl">Either preference</span><span class="sv">20 citizens — 3 fill remaining keeper slots, 17 become sacrificers</span></div>
+    <div class="s-line"><span class="sl">Sacrificer preference</span><span class="sv">25 citizens</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">The 55th deposit triggers auto-resolution. Contract locks immediately. 13 keepers and 42 sacrificers proceed to the waiting period. Sacrificers are left to die. Once supply reaches 69, all 55 participants split the treasury pool. Keepers receive citizen + ETH. Sacrificers receive evader + ETH.</div>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 02 — PERIOD ADVANCES, LATER PERIOD RESOLVES</div>
+    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
+    <div class="s-line"><span class="sl">End of period 1 (day 6)</span><span class="sv">48 participants — target 55 not met</span></div>
+    <div class="s-line"><span class="sl">Contract advances to period 2</span><span class="sv">Target 69, 4 days</span></div>
+    <div class="s-line"><span class="sl">Day 9</span><span class="sv">69 participants join</span></div>
+    <div class="s-line"><span class="sl">Keeper slots available</span><span class="sv">22 (69 − 47 non-participants)</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">All 48 period 1 participants carry forward and retain their keeper queue positions. 21 new participants join in period 2 and sit behind them in the queue. The 69th deposit triggers auto-resolution. Period 2 participants can only take keeper slots not already claimed by period 1 participants. Larger pool means higher payout per person than period 1 would have given.</div>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 03 — RETROACTIVE VOTE</div>
+    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
+    <div class="s-line"><span class="sl">Current period</span><span class="sv">3 (target 80)</span></div>
+    <div class="s-line"><span class="sl">Current participants</span><span class="sv">63</span></div>
+    <div class="s-line"><span class="sl">Previous period 1 target</span><span class="sv">55 — eligible for vote</span></div>
+    <div class="s-line"><span class="sl">Votes cast for threshold 55</span><span class="sv">55 of 63 participants vote yes</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">Vote passes immediately. The 8 non-voters are reclassified as non-participants — their NFTs are returned and they claim full treasury share as normal survivors. The remaining 55 proceed as settlement participants. Keeper eligibility follows original period rules — period 1 participants retain first refusal on keeper slots.</div>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 04 — THE LATE KEEPER</div>
+    <div class="s-line"><span class="sl">Available keeper slots</span><span class="sv">5</span></div>
+    <div class="s-line"><span class="sl">Keeper (period 1)</span><span class="sv">3 citizens — all take a slot</span></div>
+    <div class="s-line"><span class="sl">Either (period 1, early)</span><span class="sv">4 citizens — 2 fill remaining slots</span></div>
+    <div class="s-line"><span class="sl">New keeper (period 1, later)</span><span class="sv">1 citizen</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">The new keeper bumps the most recently deposited either citizen from their keeper slot. That either citizen moves to the sacrificer pool but remains either — if a slot reopens they move back. The new keeper takes their place. Earlier either players keep their slots as they deposited before the new keeper.</div>
+    </div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 05 — 21 DAY EXPIRY</div>
+    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
+    <div class="s-line"><span class="sl">Peak participants reached</span><span class="sv">47 (never hit 55)</span></div>
+    <div class="s-line"><span class="sl">Days elapsed</span><span class="sv">21</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">No period target was reached across all seven periods. The contract closes automatically at the end of day 21. All 47 citizen NFTs are returned to their original depositor wallets. Each holder retains their citizen and their right to a full treasury share as a natural game survivor.</div>
+    </div>
+    <div class="warn-text">⚠ NOTE — citizens returned mid-game may have outstanding tax obligations. Check your tax status immediately on return.</div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 06 — PREFERENCE CHANGE PENALTY</div>
+    <div class="s-line"><span class="sl">Participant joins period 1, day 2</span><span class="sv">Selects keeper — takes slot 4 of 13</span></div>
+    <div class="s-line"><span class="sl">Day 5</span><span class="sv">Changes preference to sacrificer</span></div>
+    <div class="s-line"><span class="sl">Result</span><span class="sv">Keeper slot lost, period 1 eligibility lost</span></div>
+    <div class="s-line"><span class="sl">Day 5, later</span><span class="sv">Tries to switch back to keeper</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">The participant can select keeper again only if slots are available. If they do, their position in the queue is based on their new timestamp — day 5 — not their original day 2 deposit. They now sit behind all other keeper and either participants who deposited before day 5. The earlier advantage is permanently lost.</div>
+    </div>
+  </div>
+</div>
 
 <footer>
   BUILT BY <a href="https://x.com/_smartie118" target="_blank">_SMARTIE</a>
@@ -132,6 +375,18 @@ const TREASURY_WALLET = '0x8e829e09965f7986b2449864ff00b06458601c2f';
 const CONTRACT        = '0x4f249b2dc6cecbd549a0c354bbfc4919e8c5d3ae';
 const TARGET = 69;
 const RPCS = ['https://eth.llamarpc.com','https://rpc.ankr.com/eth','https://cloudflare-eth.com','https://ethereum.publicnode.com'];
+
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.cope-panel, .content-panel').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  const panel = document.getElementById('panel-' + name);
+  panel.style.display = 'block';
+  panel.classList.add('active');
+  const idx = ['manifesto','scenarios','cope'].indexOf(name);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+showTab('manifesto');
 
 async function rpcCall(url, method, params) {
   const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
