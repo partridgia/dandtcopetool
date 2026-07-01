@@ -136,8 +136,9 @@
     <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.) TOOL</div>
     <nav class="tab-nav">
       <button class="tab-btn active" onclick="showTab('manifesto')">MANIFESTO</button>
-      <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
       <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
+      <button class="tab-btn" onclick="showTab('howitworks')">HOW IT WORKS</button>
+      <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
     </nav>
   </header>
 </div>
@@ -159,9 +160,9 @@
           </div>
         </div>
         <div class="header-row">
-          <span class="header-label">1/69 citizen value</span>
+          <span class="header-label">1/69 clearing price</span>
           <div class="header-input-wrap">
-            <input class="header-input" type="number" id="citizenVal" value="3" min="0" step="0.1">
+            <input class="header-input" type="number" id="citizenVal" value="2" min="0" step="0.1">
             <span class="header-unit">ETH</span>
           </div>
         </div>
@@ -190,6 +191,19 @@
 
 <!-- ── MANIFESTO ── -->
 <div id="panel-manifesto" class="content-panel active">
+  <div style="padding: 8px 0 0;">
+    <div class="m-text" style="margin-bottom: 40px;">Every day you hold a citizen NFT you pay taxes.</div>
+    <div class="m-text" style="margin-bottom: 40px;">No end date.</div>
+    <div class="m-text" style="margin-bottom: 40px;">No guarantee you make it to the final 69.</div>
+    <div class="m-text" style="margin-bottom: 40px;">C.O.P.E. lets citizens agree to end the game together.</div>
+    <div style="padding-top: 40px; border-top: 1px solid var(--yellow-text);">
+      <div class="m-text" style="letter-spacing: 3px; line-height: 3;">THE GAME ENDS<br>WHEN ENOUGH OF YOU<br>DECIDE IT DOES.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<div id="panel-howitworks" class="content-panel">
   <div class="section-title">THE C.O.P.E. GAME</div>
 
   <div class="m-block">
@@ -255,6 +269,11 @@
   <div class="m-block">
     <div class="m-label">If the target is met</div>
     <div class="m-text">If enough participants deposit to meet the game target, the contract locks immediately at that block. No new deposits are accepted. Sacrificers remain exposed to the game's kill function and will be burned in due course. Keeper NFTs are protected during this waiting period. Once total citizen supply reaches 69, the C.O.P.E. game pulls each NFT's share of the main treasury. Participants then claim their own NFT and ETH share directly from the contract — keepers claim their citizen NFT and ETH, sacrificers claim their evader NFT and ETH.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">The waiting period</div>
+    <div class="m-text">Upon resolution, some NFTs within the C.O.P.E. contract may have up to 7 epochs of taxes pre-paid. The game cannot complete until those citizens become delinquent, are audited, and are killed by the main game. During this period, citizen NFTs outside the contract may trade at a premium reflecting the treasury that can be claimed — but it will not be possible to return any NFTs to participants until the treasury share has been claimed and distribution is complete. For those NFTs which would become part of the final 69, bailouts will be sought from m0dest or taxes will be paid on their behalf.</div>
   </div>
 
   <div class="m-block">
@@ -387,7 +406,7 @@ function showTab(name) {
   const panel = document.getElementById('panel-' + name);
   panel.style.display = 'block';
   panel.classList.add('active');
-  const idx = ['manifesto','scenarios','cope'].indexOf(name);
+  const idx = ['manifesto','cope','howitworks','scenarios'].indexOf(name);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
 }
 
