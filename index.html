@@ -46,7 +46,7 @@
   .header-input:focus { outline: none; }
   .header-unit { font-size: var(--fs-sm); color: #333; }
   .err-box { border: 1px solid #cc0000; color: #cc0000; font-size: var(--fs-sm); padding: 10px 12px; margin-bottom: 14px; display: none; line-height: 2; }
-  .slider-wrap { margin-top: 16px; padding-top: 0; }
+  .slider-wrap { margin-top: 16px; }
   .slider-counters { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
   .sc-group { text-align: center; }
   .sc-group.left { text-align: left; }
@@ -74,40 +74,50 @@
   .group-total .tv { font-size: var(--fs); color: var(--yellow-text); }
   .warn { font-size: var(--fs-sm); color: #ff4444; margin-top: 16px; letter-spacing: 1px; line-height: 2; }
 
-  /* ── MANIFESTO / SCENARIOS ── */
+  /* ── CONTENT PANELS ── */
   .content-panel { max-width: 680px; margin: 0 auto; padding: 32px 24px; display: none; }
   .content-panel.active { display: block; }
   .cope-panel { display: none; }
   .cope-panel.active { display: block; }
 
+  /* ── MANIFESTO ── */
   .section-title { font-size: 8px; letter-spacing: 3px; color: var(--yellow-text); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #333; }
+  .m-subheading { font-size: 8px; letter-spacing: 2px; color: var(--yellow-bg); margin-bottom: 24px; margin-top: 8px; }
   .m-block { margin-bottom: 28px; }
   .m-label { font-size: var(--fs-sm); color: #555; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; line-height: 2; }
   .m-text { font-size: var(--fs-sm); line-height: 2.4; color: var(--yellow-text); }
-  .m-divider { border: none; border-top: 1px solid #222; margin: 24px 0; }
-  .m-subheading { font-size: 8px; letter-spacing: 2px; color: var(--yellow-bg); margin-bottom: 24px; margin-top: 8px; }
+  .m-divider { border: none; border-top: 1px solid #222; margin: 28px 0; }
 
-  .pill { display: inline-block; font-size: 6px; padding: 3px 8px; border: 1px solid; margin-right: 6px; letter-spacing: 1px; }
-  .pill-keep { border-color: var(--yellow-text); color: var(--yellow-text); }
-  .pill-sac { border-color: #ff4444; color: #ff4444; }
-  .pill-either { border-color: #555; color: #555; }
+  /* ── TIMING TABLE ── */
+  .timing-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .timing-table th { font-size: 6px; color: #444; letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 8px 12px; border-bottom: 1px solid #333; background: #0a0a0a; }
+  .timing-table th:not(:first-child) { text-align: right; }
+  .timing-table td { font-size: 6px; padding: 10px 12px; border-bottom: 1px solid #1a1a1a; line-height: 2; }
+  .timing-table td:first-child { color: #888; }
+  .timing-table td:nth-child(2) { color: var(--yellow-text); font-size: 8px; text-align: right; }
+  .timing-table td:nth-child(3) { color: #ccc; text-align: right; }
+  .timing-table tr:nth-child(odd) td { background: #080808; }
+  .timing-table tr:nth-child(even) td { background: #050505; }
+  .timing-table tr:last-child td { border-bottom: none; }
 
-  .period-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  .period-table th { font-size: 6px; color: #444; letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 8px 12px; border-bottom: 1px solid #333; background: #0a0a0a; }
-  .period-table th:not(:first-child) { text-align: right; }
-  .period-table td { font-size: 6px; padding: 10px 12px; border-bottom: 1px solid #1a1a1a; line-height: 2; }
-  .period-table td:first-child { color: #888; }
-  .period-table td:nth-child(2) { color: var(--yellow-text); font-size: 8px; text-align: right; }
-  .period-table td:nth-child(3) { color: #ccc; text-align: right; }
-  .period-table td:nth-child(4) { color: #ccc; text-align: right; }
-  .period-table tr:nth-child(odd) td { background: #080808; }
-  .period-table tr:nth-child(even) td { background: #050505; }
-  .period-table tr:last-child td { border-bottom: none; }
+  /* ── SCHEDULE TABLE ── */
+  .schedule-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .schedule-table th { font-size: 6px; color: #444; letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 8px 12px; border-bottom: 1px solid #333; background: #0a0a0a; }
+  .schedule-table th:not(:first-child) { text-align: right; }
+  .schedule-table td { font-size: 6px; padding: 10px 12px; border-bottom: 1px solid #1a1a1a; line-height: 2; }
+  .schedule-table td:first-child { color: #888; }
+  .schedule-table td:nth-child(2) { color: var(--yellow-text); font-size: 8px; text-align: right; }
+  .schedule-table td:nth-child(3) { color: #ccc; text-align: right; }
+  .schedule-table td:nth-child(4) { color: #ccc; text-align: right; }
+  .schedule-table tr:nth-child(odd) td { background: #080808; }
+  .schedule-table tr:nth-child(even) td { background: #050505; }
+  .schedule-table tr:last-child td { border-bottom: none; }
 
+  /* ── SCENARIOS ── */
   .scenario-card { border: 1px solid #333; padding: 16px; margin-bottom: 16px; }
   .scenario-title { font-size: var(--fs-sm); color: var(--yellow-bg); letter-spacing: 2px; margin-bottom: 14px; line-height: 2; }
   .s-line { display: flex; justify-content: space-between; font-size: 6px; margin-bottom: 8px; gap: 12px; }
-  .s-line .sl { color: #555; letter-spacing: 1px; line-height: 2; flex-shrink: 0; }
+  .s-line .sl { color: #888; letter-spacing: 1px; line-height: 2; flex-shrink: 0; }
   .s-line .sv { color: var(--yellow-text); line-height: 2; text-align: right; }
   .outcome-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid #222; }
   .outcome-label { font-size: 6px; color: #444; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
@@ -133,7 +143,7 @@
 </div>
 
 <!-- ── COPE TOOL ── -->
-<div id="panel-cope" class="cope-panel active">
+<div id="panel-cope" class="cope-panel">
   <div style="background: var(--yellow-bg);">
     <div style="max-width: 680px; margin: 0 auto; padding: 0 24px 24px;">
       <div class="cope-inputs">
@@ -179,8 +189,8 @@
 </div>
 
 <!-- ── MANIFESTO ── -->
-<div id="panel-manifesto" class="content-panel">
-  <div class="section-title">THE COLLECTIVE SETTLEMENT</div>
+<div id="panel-manifesto" class="content-panel active">
+  <div class="section-title">THE C.O.P.E. GAME</div>
 
   <div class="m-block">
     <div class="m-label">What is this?</div>
@@ -189,99 +199,89 @@
 
   <div class="m-block">
     <div class="m-label">The offer</div>
-    <div class="m-text">The C.O.P.E. settlement contract lets a group of citizens agree to resolve the game together — before the natural end. You deposit your citizen NFT, state your role, and collectively decide who lives and who is left to die. In return, everyone in the settlement gets a guaranteed share of the treasury.</div>
+    <div class="m-text">The C.O.P.E. settlement contract lets a group of citizens agree to resolve the game together — before the natural end. You deposit your citizen NFT and collectively decide who lives and who is left to die. In return, everyone in the settlement gets a guaranteed share of the treasury.</div>
   </div>
 
   <hr class="m-divider">
-
-  <div class="m-subheading">JOINING THE SETTLEMENT</div>
+  <div class="m-subheading">JOINING THE C.O.P.E. GAME</div>
 
   <div class="m-block">
     <div class="m-label">How to join</div>
-    <div class="m-text">Transfer your citizen NFT into the settlement contract. Your taxes must be current at the time of deposit. Once in, you state your preferred role.</div>
+    <div class="m-text">Each C.O.P.E. game opens at 00:00 UTC and runs for 42 hours based on a defined minimum participant number. If you would be happy to exit the Death and Taxes game based on the minimum treasury split at resolution, transfer your citizen NFT into the contract during this window. If citizens die in the main game during the period, NFT slots increase accordingly.</div>
   </div>
 
   <div class="m-block">
-    <div class="m-label">Your role</div>
-    <div class="m-text">
-      <span class="pill pill-keep">KEEPER</span> you want to survive and keep your citizen NFT. Only available when keeper slots are open.<br><br>
-      <span class="pill pill-sac">SACRIFICER</span> you are willing to be left to die, receiving an evader NFT and your treasury share.<br><br>
-      <span class="pill pill-either">EITHER</span> you are happy with whichever role is needed. Keeper spots are filled first — by explicit keepers first, then either players, in order of deposit date. If keeper slots are full when you join, only sacrificer or either are available.
-    </div>
+    <div class="m-label">Holding multiple NFTs?</div>
+    <div class="m-text">If you hold more than one citizen NFT, consider entering a proportion of them into the C.O.P.E. game. Any citizens you keep outside the game remain yours — if the game resolves, those citizens will be among the final 69 survivors and you will receive a full treasury share and retain the NFT for each one. Entering some and keeping others lets you benefit from both the guaranteed settlement payout and the natural game resolution.</div>
   </div>
 
   <div class="m-block">
-    <div class="m-label">Changing your mind</div>
-    <div class="m-text">You can update your role preference while the contract is open. Be aware — changing your preference resets your position in the keeper queue entirely. Your deposit timestamp resets to the time of change and you lose any period-based keeper eligibility you had built up. This cannot be undone.</div>
+    <div class="m-label">Tax status on entry</div>
+    <div class="m-text">Your tax status is checked at the point of deposit. For the first 24 hours of a game, your taxes must be fully current. In the final 18 hours, participants with outstanding taxes due that same day are also permitted entry — you will be returned before midnight UTC and will have time to pay before becoming delinquent. If you are unable to pay taxes before being audited after returning, we suggest contacting m0dest directly to request a bailout.</div>
   </div>
 
-  <hr class="m-divider">
-
-  <div class="m-subheading">HOW THE CONTRACT RESOLVES</div>
-
-  <div class="m-block">
-    <div class="m-label">Filling periods</div>
-    <div class="m-text">The contract runs for a maximum of 21 days across seven filling periods. Each period has a participant target. If that target is reached, the contract locks and resolves immediately — no further action needed. If a period expires without hitting its target, the contract advances to the next period. All existing participants carry forward automatically and their position is preserved.</div>
-  </div>
-
-  <table class="period-table">
+  <table class="timing-table">
     <tr>
-      <th>Period</th>
-      <th>Target</th>
-      <th>Duration</th>
-      <th>Days</th>
+      <th>Game window</th>
+      <th>UTC time</th>
+      <th>Tax requirement</th>
     </tr>
-    <tr><td>1</td><td>55</td><td>6 days</td><td>1–6</td></tr>
-    <tr><td>2</td><td>69</td><td>4 days</td><td>7–10</td></tr>
-    <tr><td>3</td><td>80</td><td>3 days</td><td>11–13</td></tr>
-    <tr><td>4</td><td>85</td><td>2 days</td><td>14–15</td></tr>
-    <tr><td>5</td><td>90</td><td>2 days</td><td>16–17</td></tr>
-    <tr><td>6</td><td>95</td><td>1 day</td><td>18</td></tr>
-    <tr><td>7</td><td>100</td><td>3 days</td><td>19–21</td></tr>
+    <tr><td>Hours 0–24</td><td>00:00 – 00:00</td><td>Fully current</td></tr>
+    <tr><td>Hours 24–42</td><td>00:00 – 18:00</td><td>Current or owes today's taxes</td></tr>
+    <tr><td>Game closes</td><td>18:00 UTC day 2</td><td>All NFTs returned</td></tr>
   </table>
 
+  <hr class="m-divider">
+  <div class="m-subheading">KEEPER SLOTS AND BIDDING</div>
+
   <div class="m-block">
-    <div class="m-label">Why join early?</div>
-    <div class="m-text">Joining in an earlier period has two advantages. First, you are first in the keeper queue — earlier deposits take keeper slots before later ones. Second, if a tax bailout is agreed with m0dest, tax protection begins from the day you deposit. The earlier you join, the more tax-free days you receive.</div>
+    <div class="m-label">How keeper slots work</div>
+    <div class="m-text">Keeper slots are calculated live throughout the game: 69 minus the number of citizens not in the C.O.P.E. game. As more citizens die in the main game, keeper slots increase — they never decrease. Slots are filled by earliest depositors first. If you are in a keeper slot and a higher bidder takes it, you move down to sacrificer status.</div>
   </div>
 
   <div class="m-block">
-    <div class="m-label">Later periods mean better payouts</div>
-    <div class="m-text">Higher participant targets mean more sacrificers, which means a larger shared pool and a higher payout per participant. Participants who joined in earlier periods carry forward and benefit from this increase. You commit early at lower odds, and gain if the pool grows around you.</div>
+    <div class="m-label">Bidding for a keeper slot</div>
+    <div class="m-text">If you want to secure a keeper slot regardless of deposit order, you can place a bid — the amount of ETH you are willing to forgo from your treasury share in exchange for keeping your citizen NFT. Bids are irrevocable once placed. No ETH is sent upfront — your bid is an on-chain commitment deducted from your treasury share at resolution. Minimum bid is 1 ETH in increments of 0.25 ETH.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">The clearing price</div>
+    <div class="m-text">When the game locks, keeper slots are awarded to the highest bidders. All winning bidders pay the same price — the lowest winning bid. This is called the clearing price. If there are 13 keeper slots and 20 bidders, the 13 highest bids win and all 13 pay the 13th highest bid amount. The forfeited ETH from all winning bids at the clearing price is added to the sacrificer pool — increasing the payout for those who sacrifice.</div>
   </div>
 
   <hr class="m-divider">
+  <div class="m-subheading">HOW THE C.O.P.E. GAME RESOLVES</div>
 
   <div class="m-block">
-    <div class="m-label">Keeper slots</div>
-    <div class="m-text">Keeper slots are calculated live: 69 minus the number of citizens not in the settlement. As more citizens die in the main game, keeper slots increase. They never decrease. Keeper slots are allocated first to participants who selected keeper in the earliest period that slots were available, then to either players in deposit order. If you change your preference, you lose your place and must rejoin the queue from the current period.</div>
-  </div>
-
-  <hr class="m-divider">
-
-  <div class="m-block">
-    <div class="m-label">Retroactive threshold vote</div>
-    <div class="m-text">At any point in a later period, if the participant count already meets or exceeds a previous period's target, participants can vote on-chain to resolve at that lower threshold. Each vote resets at 00:00 UTC daily. If enough participants vote yes to meet the threshold, the contract resolves immediately. Those who did not vote yes are reclassified as non-participants — their NFTs are returned and they claim a full treasury share as normal survivors. At the point of voting you confirm your role — keeper eligibility follows the same period rules as normal.</div>
-  </div>
-
-  <hr class="m-divider">
-
-  <div class="m-subheading">AFTER THE LOCK</div>
-
-  <div class="m-block">
-    <div class="m-label">How resolution works</div>
-    <div class="m-text">Once the contract locks — either by hitting a period target or a successful vote — no new deposits are accepted. Sacrificers remain exposed to the game's kill function and will be burned in due course. Keeper NFTs are protected during this waiting period. Once total citizen supply reaches 69, the settlement pulls each NFT's share of the main treasury and distributes — ETH and citizen NFTs returned to keepers, ETH and evader NFTs forwarded to sacrificers.</div>
+    <div class="m-label">If the target is met</div>
+    <div class="m-text">If enough participants deposit to meet the game target, the contract locks immediately at that block. No new deposits are accepted. Sacrificers remain exposed to the game's kill function and will be burned in due course. Keeper NFTs are protected during this waiting period. Once total citizen supply reaches 69, the C.O.P.E. game pulls each NFT's share of the main treasury. Participants then claim their own NFT and ETH share directly from the contract — keepers claim their citizen NFT and ETH, sacrificers claim their evader NFT and ETH.</div>
   </div>
 
   <div class="m-block">
-    <div class="m-label">Tax bailout</div>
-    <div class="m-text">We are seeking to agree with m0dest that all citizens deposited into the settlement contract will be granted a tax bailout for its duration. If agreed, participating citizens will not accrue tax obligations while the contract is active.</div>
+    <div class="m-label">If the target is not met</div>
+    <div class="m-text">If the game closes at 18:00 UTC on day 2 without reaching its target, all citizen NFTs are returned to their original wallets. There is no penalty. Each game attempt is fully independent.</div>
   </div>
 
   <div class="m-block">
-    <div class="m-label">If collective agreement cannot be found</div>
-    <div class="m-text">If after 21 days no period target has been met, the contract closes. All citizen NFTs are returned to their original wallets.</div>
+    <div class="m-label">Planned game schedule</div>
+    <div class="m-text">C.O.P.E. games are launched with a target participant count and run for 42 hours each. If a game does not resolve, a new game can be launched with the same or a different target. The planned schedule will be published on this site ahead of each game. Targets may increase over time — later games with higher targets mean more sacrificers, a larger pool, and higher payouts for all participants.</div>
   </div>
+
+  <table class="schedule-table">
+    <tr>
+      <th>Game</th>
+      <th>Target</th>
+      <th>Opens</th>
+      <th>Closes</th>
+    </tr>
+    <tr><td>1</td><td>55</td><td>00:00 UTC day 1</td><td>18:00 UTC day 2</td></tr>
+    <tr><td>2</td><td>69</td><td>TBC</td><td>TBC</td></tr>
+    <tr><td>3</td><td>80</td><td>TBC</td><td>TBC</td></tr>
+    <tr><td>4</td><td>85</td><td>TBC</td><td>TBC</td></tr>
+    <tr><td>5</td><td>90</td><td>TBC</td><td>TBC</td></tr>
+    <tr><td>6</td><td>95</td><td>TBC</td><td>TBC</td></tr>
+    <tr><td>7</td><td>100</td><td>TBC</td><td>TBC</td></tr>
+  </table>
 </div>
 
 <!-- ── SCENARIOS ── -->
@@ -289,79 +289,81 @@
   <div class="section-title">EXAMPLE SCENARIOS</div>
 
   <div class="scenario-card">
-    <div class="scenario-title">SCENARIO 01 — PERIOD 1 AUTO-RESOLVES</div>
+    <div class="scenario-title">SCENARIO 01 — CLEAN RESOLUTION</div>
     <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
-    <div class="s-line"><span class="sl">Day</span><span class="sv">4 (period 1, target 55)</span></div>
-    <div class="s-line"><span class="sl">Participants deposited</span><span class="sv">55</span></div>
-    <div class="s-line"><span class="sl">Keeper slots available</span><span class="sv">13 (69 − 56 non-participants)</span></div>
-    <div class="s-line"><span class="sl">Keeper preference</span><span class="sv">10 citizens — all take a slot</span></div>
-    <div class="s-line"><span class="sl">Either preference</span><span class="sv">20 citizens — 3 fill remaining keeper slots, 17 become sacrificers</span></div>
-    <div class="s-line"><span class="sl">Sacrificer preference</span><span class="sv">25 citizens</span></div>
+    <div class="s-line"><span class="sl">Game target</span><span class="sv">55</span></div>
+    <div class="s-line"><span class="sl">Hour 14</span><span class="sv">55th deposit received</span></div>
+    <div class="s-line"><span class="sl">Keeper slots at lock</span><span class="sv">13 (69 − 56 non-participants)</span></div>
+    <div class="s-line"><span class="sl">First 13 depositors</span><span class="sv">Assigned keeper status</span></div>
+    <div class="s-line"><span class="sl">Remaining 42</span><span class="sv">Assigned sacrificer status</span></div>
     <div class="outcome-row">
       <div class="outcome-label">Outcome</div>
-      <div class="outcome-item">The 55th deposit triggers auto-resolution. Contract locks immediately. 13 keepers and 42 sacrificers proceed to the waiting period. Sacrificers are left to die. Once supply reaches 69, all 55 participants split the treasury pool. Keepers receive citizen + ETH. Sacrificers receive evader + ETH.</div>
+      <div class="outcome-item">Contract locks at the 55th deposit. No bids placed — keeper slots filled entirely by deposit order. 13 keepers protected, 42 sacrificers left to die. Once supply reaches 69, treasury ETH is pulled into the contract. Each participant claims their own share directly — keepers claim their citizen NFT and ETH, sacrificers claim their evader NFT and ETH.</div>
     </div>
   </div>
 
   <div class="scenario-card">
-    <div class="scenario-title">SCENARIO 02 — PERIOD ADVANCES, LATER PERIOD RESOLVES</div>
-    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
-    <div class="s-line"><span class="sl">End of period 1 (day 6)</span><span class="sv">48 participants — target 55 not met</span></div>
-    <div class="s-line"><span class="sl">Contract advances to period 2</span><span class="sv">Target 69, 4 days</span></div>
-    <div class="s-line"><span class="sl">Day 9</span><span class="sv">69 participants join</span></div>
-    <div class="s-line"><span class="sl">Keeper slots available</span><span class="sv">22 (69 − 47 non-participants)</span></div>
+    <div class="scenario-title">SCENARIO 02 — BID AUCTION FOR KEEPER SLOTS</div>
+    <div class="s-line"><span class="sl">Game target</span><span class="sv">55</span></div>
+    <div class="s-line"><span class="sl">Keeper slots at lock</span><span class="sv">13</span></div>
+    <div class="s-line"><span class="sl">Bidders</span><span class="sv">20 participants place bids</span></div>
+    <div class="s-line"><span class="sl">Top 13 bids</span><span class="sv">4, 3.5, 3, 2.75, 2.5, 2.5, 2.25, 2, 2, 1.75, 1.75, 1.5, 1.25 ETH</span></div>
+    <div class="s-line"><span class="sl">Clearing price</span><span class="sv">1.25 ETH (13th highest bid)</span></div>
+    <div class="s-line"><span class="sl">7 losing bidders</span><span class="sv">Become sacrificers</span></div>
     <div class="outcome-row">
       <div class="outcome-label">Outcome</div>
-      <div class="outcome-item">All 48 period 1 participants carry forward and retain their keeper queue positions. 21 new participants join in period 2 and sit behind them in the queue. The 69th deposit triggers auto-resolution. Period 2 participants can only take keeper slots not already claimed by period 1 participants. Larger pool means higher payout per person than period 1 would have given.</div>
+      <div class="outcome-item">All 13 winning bidders pay 1.25 ETH — their individual bid minus the clearing price is retained, only the clearing price is deducted. 13 × 1.25 = 16.25 ETH added to the sacrificer pool. Sacrificers receive a larger ETH share as a result. 7 losing bidders and any non-bidding late depositors become sacrificers. All participants claim their own NFT and ETH share directly from the contract at resolution.</div>
     </div>
   </div>
 
   <div class="scenario-card">
-    <div class="scenario-title">SCENARIO 03 — RETROACTIVE VOTE</div>
-    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
-    <div class="s-line"><span class="sl">Current period</span><span class="sv">3 (target 80)</span></div>
-    <div class="s-line"><span class="sl">Current participants</span><span class="sv">63</span></div>
-    <div class="s-line"><span class="sl">Previous period 1 target</span><span class="sv">55 — eligible for vote</span></div>
-    <div class="s-line"><span class="sl">Votes cast for threshold 55</span><span class="sv">55 of 63 participants vote yes</span></div>
+    <div class="scenario-title">SCENARIO 03 — LATE ENTRY IN FINAL 18 HOURS</div>
+    <div class="s-line"><span class="sl">Game target</span><span class="sv">55</span></div>
+    <div class="s-line"><span class="sl">Hour 26</span><span class="sv">Participant deposits with taxes due today</span></div>
+    <div class="s-line"><span class="sl">Tax status</span><span class="sv">Owes today — permitted in final 18 hours</span></div>
+    <div class="s-line"><span class="sl">Game closes</span><span class="sv">18:00 UTC day 2 — target not met</span></div>
+    <div class="s-line"><span class="sl">NFT returned</span><span class="sv">18:00 UTC — 6 hours before midnight</span></div>
     <div class="outcome-row">
       <div class="outcome-label">Outcome</div>
-      <div class="outcome-item">Vote passes immediately. The 8 non-voters are reclassified as non-participants — their NFTs are returned and they claim full treasury share as normal survivors. The remaining 55 proceed as settlement participants. Keeper eligibility follows original period rules — period 1 participants retain first refusal on keeper slots.</div>
+      <div class="outcome-item">Participant receives their citizen NFT back at 18:00 UTC. They have until midnight UTC to pay outstanding taxes before becoming delinquent. If unable to pay before audit triggers, they should contact m0dest directly to request a bailout.</div>
+    </div>
+    <div class="warn-text">⚠ On return from any game, check your tax status immediately.</div>
+  </div>
+
+  <div class="scenario-card">
+    <div class="scenario-title">SCENARIO 04 — KEEPER SLOT CONTESTED BY BID</div>
+    <div class="s-line"><span class="sl">Keeper slots</span><span class="sv">5 available</span></div>
+    <div class="s-line"><span class="sl">First 5 depositors</span><span class="sv">All assigned keeper status by deposit order</span></div>
+    <div class="s-line"><span class="sl">Hour 10</span><span class="sv">6th depositor places bid of 2 ETH</span></div>
+    <div class="s-line"><span class="sl">Lowest current keeper</span><span class="sv">5th depositor — no bid placed, bumped to sacrificer</span></div>
+    <div class="outcome-row">
+      <div class="outcome-label">Outcome</div>
+      <div class="outcome-item">The bidder takes the 5th keeper slot. The bumped depositor becomes a sacrificer. If a new keeper slot opens later — due to more participants joining or citizens dying in the main game — the bumped depositor moves back to keeper status automatically as the next earliest non-bidding depositor.</div>
     </div>
   </div>
 
   <div class="scenario-card">
-    <div class="scenario-title">SCENARIO 04 — THE LATE KEEPER</div>
-    <div class="s-line"><span class="sl">Available keeper slots</span><span class="sv">5</span></div>
-    <div class="s-line"><span class="sl">Keeper (period 1)</span><span class="sv">3 citizens — all take a slot</span></div>
-    <div class="s-line"><span class="sl">Either (period 1, early)</span><span class="sv">4 citizens — 2 fill remaining slots</span></div>
-    <div class="s-line"><span class="sl">New keeper (period 1, later)</span><span class="sv">1 citizen</span></div>
+    <div class="scenario-title">SCENARIO 05 — TARGET NOT MET, GAME EXPIRES</div>
+    <div class="s-line"><span class="sl">Game target</span><span class="sv">55</span></div>
+    <div class="s-line"><span class="sl">Peak participants</span><span class="sv">38</span></div>
+    <div class="s-line"><span class="sl">Game closes</span><span class="sv">18:00 UTC day 2</span></div>
     <div class="outcome-row">
       <div class="outcome-label">Outcome</div>
-      <div class="outcome-item">The new keeper bumps the most recently deposited either citizen from their keeper slot. That either citizen moves to the sacrificer pool but remains either — if a slot reopens they move back. The new keeper takes their place. Earlier either players keep their slots as they deposited before the new keeper.</div>
+      <div class="outcome-item">Target not reached. All 38 citizen NFTs returned to original depositor wallets at 18:00 UTC. No ETH changes hands. Each holder retains their citizen and their right to a full treasury share as a natural game survivor. A new game may be launched with the same or a revised target.</div>
     </div>
+    <div class="warn-text">⚠ Check your tax status immediately on return.</div>
   </div>
 
   <div class="scenario-card">
-    <div class="scenario-title">SCENARIO 05 — 21 DAY EXPIRY</div>
-    <div class="s-line"><span class="sl">Citizens remaining</span><span class="sv">111</span></div>
-    <div class="s-line"><span class="sl">Peak participants reached</span><span class="sv">47 (never hit 55)</span></div>
-    <div class="s-line"><span class="sl">Days elapsed</span><span class="sv">21</span></div>
+    <div class="scenario-title">SCENARIO 06 — KEEPER SLOTS INCREASE MID-GAME</div>
+    <div class="s-line"><span class="sl">Citizens remaining at game start</span><span class="sv">111</span></div>
+    <div class="s-line"><span class="sl">Game target</span><span class="sv">55</span></div>
+    <div class="s-line"><span class="sl">Keeper slots at open</span><span class="sv">13 (69 − 56 non-participants)</span></div>
+    <div class="s-line"><span class="sl">Hour 18 — 3 citizens die in main game</span><span class="sv">Non-participants now 53</span></div>
+    <div class="s-line"><span class="sl">Keeper slots recalculated</span><span class="sv">16 (69 − 53)</span></div>
     <div class="outcome-row">
       <div class="outcome-label">Outcome</div>
-      <div class="outcome-item">No period target was reached across all seven periods. The contract closes automatically at the end of day 21. All 47 citizen NFTs are returned to their original depositor wallets. Each holder retains their citizen and their right to a full treasury share as a natural game survivor.</div>
-    </div>
-    <div class="warn-text">⚠ NOTE — citizens returned mid-game may have outstanding tax obligations. Check your tax status immediately on return.</div>
-  </div>
-
-  <div class="scenario-card">
-    <div class="scenario-title">SCENARIO 06 — PREFERENCE CHANGE PENALTY</div>
-    <div class="s-line"><span class="sl">Participant joins period 1, day 2</span><span class="sv">Selects keeper — takes slot 4 of 13</span></div>
-    <div class="s-line"><span class="sl">Day 5</span><span class="sv">Changes preference to sacrificer</span></div>
-    <div class="s-line"><span class="sl">Result</span><span class="sv">Keeper slot lost, period 1 eligibility lost</span></div>
-    <div class="s-line"><span class="sl">Day 5, later</span><span class="sv">Tries to switch back to keeper</span></div>
-    <div class="outcome-row">
-      <div class="outcome-label">Outcome</div>
-      <div class="outcome-item">The participant can select keeper again only if slots are available. If they do, their position in the queue is based on their new timestamp — day 5 — not their original day 2 deposit. They now sit behind all other keeper and either participants who deposited before day 5. The earlier advantage is permanently lost.</div>
+      <div class="outcome-item">Three new keeper slots open automatically. The next three earliest depositors currently assigned sacrificer status move up to keeper status without any action required. Keeper slots never decrease — any further deaths in the main game only increase the slots available to settlement participants.</div>
     </div>
   </div>
 </div>
@@ -378,7 +380,10 @@ const RPCS = ['https://eth.llamarpc.com','https://rpc.ankr.com/eth','https://clo
 
 function showTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.cope-panel, .content-panel').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  document.querySelectorAll('.cope-panel, .content-panel').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
   const panel = document.getElementById('panel-' + name);
   panel.style.display = 'block';
   panel.classList.add('active');
@@ -401,8 +406,7 @@ async function tryRpcs(method, params) {
 
 async function fetchChain() {
   document.getElementById('err-box').style.display = 'none';
-  let errors = [];
-  let eth = null, pop = null;
+  let errors = [], eth = null, pop = null;
   try { eth = parseInt(await tryRpcs('eth_getBalance', [TREASURY_WALLET, 'latest']), 16) / 1e18; } catch(e) { errors.push('treasury'); }
   try { pop = parseInt(await tryRpcs('eth_call', [{ to: CONTRACT, data: '0x18160ddd' }, 'latest']), 16); } catch(e) { errors.push('population'); }
   if (errors.length) {
@@ -426,8 +430,8 @@ function calc() {
   const numNP      = 68 - sliderVal;
 
   if (pop === null) {
-    document.getElementById('sc-part').textContent  = '—';
-    document.getElementById('sc-np').textContent    = numNP;
+    document.getElementById('sc-part').textContent = '—';
+    document.getElementById('sc-np').textContent   = numNP;
     document.getElementById('groups').innerHTML = '';
     return;
   }
@@ -450,8 +454,8 @@ function calc() {
   const keeperETHActual = keeperOverflow ? 0 : keeperETHCash;
   const keeperTotal     = keeperOverflow ? citizenVal : partShare;
 
-  document.getElementById('sc-part').textContent  = numPart;
-  document.getElementById('sc-np').textContent    = numNP;
+  document.getElementById('sc-part').textContent = numPart;
+  document.getElementById('sc-np').textContent   = numNP;
 
   let html = '';
   if (numNP > 0) {
