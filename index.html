@@ -24,12 +24,15 @@
   .subtitle { font-size: 9px; color: var(--black); line-height: 2; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--black); }
 
   /* ── TABS ── */
-  .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--black); margin-top: 20px; }
+  .tab-nav-wrap { position: relative; margin-top: 20px; }
+  .tab-nav-wrap::after { content: ''; position: absolute; right: 0; top: 0; bottom: 1px; width: 40px; background: linear-gradient(to right, transparent, var(--yellow-bg)); pointer-events: none; }
+  .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--black); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tab-nav::-webkit-scrollbar { display: none; }
   .tab-btn {
     font-family: var(--mono); font-size: var(--fs-sm); padding: 10px 16px;
     background: none; border: none; color: var(--black); cursor: pointer;
     letter-spacing: 1px; opacity: 0.4; border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    margin-bottom: -1px; white-space: nowrap; flex-shrink: 0;
   }
   .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--black); }
 
@@ -134,13 +137,15 @@
   <header>
     <div class="logo">DEATH AND TAXES</div>
     <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.) TOOL</div>
-    <nav class="tab-nav">
-      <button class="tab-btn active" onclick="showTab('manifesto')">MANIFESTO</button>
-      <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
-      <button class="tab-btn" onclick="showTab('howitworks')">HOW IT WORKS</button>
-      <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
-      <button class="tab-btn" onclick="showTab('contract')">CONTRACT</button>
-    </nav>
+    <div class="tab-nav-wrap">
+      <nav class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('manifesto')">MANIFESTO</button>
+        <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
+        <button class="tab-btn" onclick="showTab('howitworks')">HOW IT WORKS</button>
+        <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
+        <button class="tab-btn" onclick="showTab('contract')">CONTRACT</button>
+      </nav>
+    </div>
   </header>
 </div>
 
@@ -561,7 +566,14 @@ function showTab(name) {
   panel.style.display = 'block';
   panel.classList.add('active');
   const idx = ['manifesto','cope','howitworks','scenarios','contract'].indexOf(name);
-  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  const activeBtn = document.querySelectorAll('.tab-btn')[idx];
+  activeBtn.classList.add('active');
+  // Scroll active tab to centre of nav bar
+  const nav = document.querySelector('.tab-nav');
+  const btnLeft = activeBtn.offsetLeft;
+  const btnWidth = activeBtn.offsetWidth;
+  const navWidth = nav.offsetWidth;
+  nav.scrollTo({ left: btnLeft - (navWidth / 2) + (btnWidth / 2), behavior: 'smooth' });
 }
 
 showTab('manifesto');
