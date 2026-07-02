@@ -139,6 +139,7 @@
       <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
       <button class="tab-btn" onclick="showTab('howitworks')">HOW IT WORKS</button>
       <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
+      <button class="tab-btn" onclick="showTab('contract')">CONTRACT</button>
     </nav>
   </header>
 </div>
@@ -387,6 +388,159 @@
   </div>
 </div>
 
+<div id="panel-contract" class="content-panel">
+  <div class="section-title">CONTRACT FUNCTIONS</div>
+
+  <div class="m-subheading">READ FUNCTIONS</div>
+
+  <div class="m-block">
+    <div class="m-label">keeperSlots()</div>
+    <div class="m-text">Returns the number of keeper slots currently available. Calculated live as 69 minus the number of citizens not in the C.O.P.E. game. Updates automatically as citizens die in the main game or new participants join.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">currentKeepers()</div>
+    <div class="m-text">Returns an array of token IDs currently allocated as keepers, ordered by priority — highest bidders first, then earliest depositors. Shows the live keeper queue at any point during the game.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">isKeeper(tokenId)</div>
+    <div class="m-text">Returns true or false for a given token ID. Tells you whether a specific citizen NFT is currently allocated a keeper slot.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">previewShare(tokenId)</div>
+    <div class="m-text">Returns the estimated ETH share for a given token ID based on current contract state. Keepers receive their treasury share minus the clearing price. Sacrificers receive their treasury share plus a portion of redistributed clearing price ETH.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">getDepositedTokens()</div>
+    <div class="m-text">Returns an array of all citizen token IDs currently deposited in the contract for the active game.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">depositor(tokenId)</div>
+    <div class="m-text">Returns the wallet address that originally deposited a given token ID. Used to verify ownership for claims and bid placement.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">depositTime(tokenId)</div>
+    <div class="m-text">Returns the timestamp of when a given token ID was deposited. Used to determine keeper slot allocation order for non-bidding participants.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">bid(tokenId)</div>
+    <div class="m-text">Returns the bid amount in ETH for a given token ID. Returns 0 if no bid has been placed.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">clearingPrice()</div>
+    <div class="m-text">Returns the current clearing price — the lowest winning bid given the current number of keeper slots and bids placed. Updates live as new bids are placed.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">claimed(tokenId)</div>
+    <div class="m-text">Returns true or false. Tells you whether a participant has already claimed their NFT and ETH share for a given token ID after resolution.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">citizenToEvader(citizenTokenId)</div>
+    <div class="m-text">Returns the evader token ID associated with a burned citizen token ID. Only populated after the contract owner has recorded the burn/mint association for a sacrificed citizen.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">state()</div>
+    <div class="m-text">Returns the current state of the contract. 0 = IDLE, 1 = OPEN, 2 = LOCKED, 3 = RESOLVED, 4 = EXPIRED.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">gameId()</div>
+    <div class="m-text">Returns the current game number. Increments by 1 each time a new game is started.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">gameTarget()</div>
+    <div class="m-text">Returns the participant target set for the current game.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">gameStart()</div>
+    <div class="m-text">Returns the Unix timestamp of when the current game started. Add 151200 (42 hours in seconds) to get the expiry time.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">participantCount()</div>
+    <div class="m-text">Returns the number of citizen NFTs currently deposited in the active game.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">totalTreasuryETH()</div>
+    <div class="m-text">Returns the total ETH pulled from the main treasury after resolution. Zero until withdrawTreasury() has been called.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">treasuryWithdrawn()</div>
+    <div class="m-text">Returns true once the treasury ETH has been pulled into the contract. Confirms that claims are ready to be made.</div>
+  </div>
+
+  <hr class="m-divider">
+  <div class="m-subheading">WRITE FUNCTIONS — PARTICIPANTS</div>
+
+  <div class="m-block">
+    <div class="m-label">depositNFT(tokenId)</div>
+    <div class="m-text">Deposits a citizen NFT into the C.O.P.E. contract. You must own the token and your taxes must be current. The contract assigns your keeper or sacrificer status automatically based on deposit order. If your deposit causes the participant count to reach the game target, the contract locks immediately.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">placeBid(tokenId, bidAmount)</div>
+    <div class="m-text">Places an irrevocable bid for a keeper slot on a token you have deposited. Bid amount must be at least 1 ETH in increments of 0.25 ETH. No ETH is sent — the bid amount is deducted from your treasury share at resolution. Only one bid can be placed per token.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">claim(tokenId, tipBps)</div>
+    <div class="m-text">Claims your NFT and ETH share after resolution. Must be called by the original depositor wallet. Tip options are 0 (no tip), 500 (5%), 1000 (10%), or 2000 (20%) basis points. Keepers receive their citizen NFT and ETH. Sacrificers receive their evader NFT and ETH. Tip is sent to the contract creator in the same transaction.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">checkExpiry()</div>
+    <div class="m-text">Callable by anyone. Checks whether the 42 hour game window has elapsed without hitting the target. If so, moves the contract to expired state and returns all NFTs to original depositor wallets automatically.</div>
+  </div>
+
+  <hr class="m-divider">
+  <div class="m-subheading">WRITE FUNCTIONS — OWNER ONLY</div>
+
+  <div class="m-block">
+    <div class="m-label">startGame(target, durationHours)</div>
+    <div class="m-text">Launches a new C.O.P.E. game. Sets the participant target and duration. Pass 0 for durationHours to use the default 42 hours. Target must be greater than current citizen supply minus 68 to ensure at least one treasury claim is possible. Contract must be in IDLE state.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">recordEvader(citizenTokenId, evaderTokenId)</div>
+    <div class="m-text">Records the association between a burned citizen token ID and the evader token ID minted in the same transaction. Must be called after each sacrificer citizen is killed by the main game. Verifies the evader NFT is now held by this contract before recording.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">withdrawTreasury(tokenIds[])</div>
+    <div class="m-text">Calls the treasury claim function on behalf of each keeper token ID provided. Accumulates ETH into the contract balance. Can be called in batches to manage gas costs. Once complete, moves contract to RESOLVED state and participants can claim.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">payTax(tokenId)</div>
+    <div class="m-text">Pays outstanding taxes for a keeper token from the contract's ETH balance. Used during the waiting period to protect keeper NFTs from being killed if a tax bailout from m0dest has not been agreed. Owner should deposit a tax reserve into the contract before using this function.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">abortAndReturn()</div>
+    <div class="m-text">Aborts the current game and returns all escrowed citizen NFTs to their original depositor wallets. Any evader NFTs already received are also returned. Any ETH held in the contract is sent to the contract owner. Cannot be called once the contract is in RESOLVED state.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">emergencyWithdrawETH(recipient)</div>
+    <div class="m-text">Transfers all ETH held in the contract to a specified address. Safety function for recovering stuck funds. Owner only.</div>
+  </div>
+
+</div>
+
 <footer>
   BUILT BY <a href="https://x.com/_smartie118" target="_blank">_SMARTIE</a>
 </footer>
@@ -406,7 +560,7 @@ function showTab(name) {
   const panel = document.getElementById('panel-' + name);
   panel.style.display = 'block';
   panel.classList.add('active');
-  const idx = ['manifesto','cope','howitworks','scenarios'].indexOf(name);
+  const idx = ['manifesto','cope','howitworks','scenarios','contract'].indexOf(name);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
 }
 
