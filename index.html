@@ -175,10 +175,10 @@
             </div>
             <div class="sc-group right">
               <div class="sc-label">Not participating</div>
-              <div class="sc-val" id="sc-np">35</div>
+              <div class="sc-val" id="sc-np">—</div>
             </div>
           </div>
-          <input type="range" id="nonpart-slider" min="0" max="68" value="33" step="1">
+          <input type="range" id="nonpart-slider" min="0" max="100" value="69" step="1">
         </div>
       </div>
     </div>
@@ -441,21 +441,36 @@ function getPop()      { const v = parseFloat(document.getElementById('pop-input
 function getTreasury() { const v = parseFloat(document.getElementById('eth-input').value); return (!isNaN(v) && v >= 0) ? v : null; }
 function fE(n, dp=4)   { return n === null || n === undefined ? '—' : n.toFixed(dp) + ' ETH'; }
 
+function updateSliderBounds() {
+  const pop    = getPop();
+  const slider = document.getElementById('nonpart-slider');
+  if (pop === null) return;
+  const minPart = Math.max(1, pop - 68);
+  const currentVal = parseInt(slider.value);
+  slider.min = 0;
+  slider.max = pop;
+  // Only enforce minimum — don't reset value if it's still valid
+  if (currentVal < minPart) slider.value = minPart;
+  // Cap at supply if somehow above it
+  if (currentVal > pop) slider.value = pop;
+}
+
 function calc() {
   const pop        = getPop();
   const treasury   = getTreasury();
   const citizenVal = parseFloat(document.getElementById('citizenVal').value) || 0;
-  const sliderVal  = parseInt(document.getElementById('nonpart-slider').value) || 0;
-  const numNP      = 68 - sliderVal;
+  const numPart    = parseInt(document.getElementById('nonpart-slider').value) || 0;
 
   if (pop === null) {
     document.getElementById('sc-part').textContent = '—';
-    document.getElementById('sc-np').textContent   = numNP;
+    document.getElementById('sc-np').textContent   = '—';
     document.getElementById('groups').innerHTML = '';
     return;
   }
 
-  const numPart         = pop - numNP;
+  updateSliderBounds();
+
+  const numNP           = pop - numPart;
   const totalSacrifice  = pop - TARGET;
   const partKeeperSlots = TARGET - numNP;
   const partSacrifice   = totalSacrifice;
@@ -476,24 +491,7 @@ function calc() {
   document.getElementById('sc-part').textContent = numPart;
   document.getElementById('sc-np').textContent   = numNP;
 
-  let html = '';
-  if (numNP > 0) {
-    html += `
-    <div class="group-card">
-      <div class="group-header">
-        <span class="group-name">Non-participants</span>
-        <span class="group-count">${numNP} citizens</span>
-      </div>
-      <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(nonPartETH,4)}</span></div>
-      <div class="group-line"><span class="gl">Citizen</span><span class="gv"><span class="equiv">equivalent</span> ${citizenVal} ETH</span></div>
-      <div class="group-total">
-        <span class="tl">Total each</span>
-        <span class="tv">${fE(nonPartTotal,4)}</span>
-      </div>
-    </div>`;
-  }
-
-  html += `
+  let html = `
     <div class="group-card">
       <div class="group-header">
         <span class="group-name">Participant keepers</span>
@@ -519,14 +517,38 @@ function calc() {
       </div>
     </div>`;
 
+  if (numNP > 0) {
+    html += `
+    <div class="group-card">
+      <div class="group-header">
+        <span class="group-name">Non-participants</span>
+        <span class="group-count">${numNP} citizens</span>
+      </div>
+      <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(nonPartETH,4)}</span></div>
+      <div class="group-line"><span class="gl">Citizen</span><span class="gv"><span class="equiv">equivalent</span> ${citizenVal} ETH</span></div>
+      <div class="group-total">
+        <span class="tl">Total each</span>
+        <span class="tv">${fE(nonPartTotal,4)}</span>
+      </div>
+    </div>`;
+  }
+
   document.getElementById('groups').innerHTML = html;
   document.getElementById('warn-box').innerHTML = keeperOverflow
     ? `<div class="warn">⚠ CITIZEN VALUE (${citizenVal} ETH) EXCEEDS SACRIFICER PAYOUT (${fE(partShare,4)}). KEEPERS RECEIVE CITIZEN ONLY — MORE TOTAL VALUE THAN SACRIFICERS.</div>`
     : '';
 }
 
-['pop-input','eth-input','citizenVal'].forEach(id => document.getElementById(id).addEventListener('input', calc));
-document.getElementById('nonpart-slider').addEventListener('input', calc);
+document.getElementById('pop-input').addEventListener('change', () => { updateSliderBounds(); calc(); });
+['eth-input','citizenVal'].forEach(id => document.getElementById(id).addEventListener('input', () => { updateSliderBounds(); calc(); }));
+document.getElementById('nonpart-slider').addEventListener('input', function() {
+  const pop = getPop();
+  if (pop !== null) {
+    const minPart = Math.max(1, pop - 68);
+    if (parseInt(this.value) < minPart) this.value = minPart;
+  }
+  calc();
+});
 
 fetchChain();
 </script>
