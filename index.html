@@ -824,83 +824,57 @@ async function submitVote() {
   const checked = Array.from(document.querySelectorAll('.token-checkbox:checked')).map(c => parseInt(c.value));
   if (!voteWalletAddress || !voteSelectedChoice || checked.length === 0) return;
   const msg = document.getElementById('vote-msg');
-  msg.textContent = 'PREPARING VOTE...';
+  msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
 
   try {
-    const timestamp = Math.floor(Date.now() / 1000);
+    // Load snapshot.js SDK if not already loaded
+    if (!window.snapshot) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@snapshot-labs/snapshot.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
 
-    const message = {
-      from:      voteWalletAddress,
-      space:     SNAPSHOT_SPACE,
-      timestamp: timestamp,
-      proposal:  SNAPSHOT_PROPOSAL,
-      choice:    voteSelectedChoice,
-      reason:    '',
-      app:       'cope-tool',
-      metadata:  JSON.stringify({ tokenIds: checked })
+    const hub    = 'https://hub.snapshot.org';
+    const client = new window.snapshot.Client712(hub);
+
+    // Web3Provider wrapper snapshot.js expects
+    const web3 = {
+      provider: window.ethereum,
+      getSigner: () => ({
+        _address: voteWalletAddress,
+        getAddress: async () => voteWalletAddress,
+        provider: {
+          send: (method, params) => window.ethereum.request({ method, params })
+        },
+        signTypedData: async (domain, types, value) => {
+          const payload = JSON.stringify({ domain, types, message: value, primaryType: 'Vote' });
+          return window.ethereum.request({ method: 'eth_signTypedData_v4', params: [voteWalletAddress, payload] });
+        }
+      })
     };
 
-    const domain = { name: 'snapshot', version: '0.1.4' };
-    const types = {
-      Vote: [
-        { name: 'from',      type: 'address' },
-        { name: 'space',     type: 'string'  },
-        { name: 'timestamp', type: 'uint64'  },
-        { name: 'proposal',  type: 'bytes32' },
-        { name: 'choice',    type: 'uint32'  },
-        { name: 'reason',    type: 'string'  },
-        { name: 'app',       type: 'string'  },
-        { name: 'metadata',  type: 'string'  }
-      ]
-    };
-
-    msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
-
-    const sig = await window.ethereum.request({
-      method: 'eth_signTypedData_v4',
-      params: [
-        voteWalletAddress,
-        JSON.stringify({
-          types: { EIP712Domain: [], Vote: types.Vote },
-          domain,
-          primaryType: 'Vote',
-          message
-        })
-      ]
+    const receipt = await client.vote(web3, voteWalletAddress, {
+      space:    SNAPSHOT_SPACE,
+      proposal: SNAPSHOT_PROPOSAL,
+      type:     'single-choice',
+      choice:   voteSelectedChoice,
+      reason:   '',
+      app:      'cope-tool',
+      metadata: { tokenIds: checked }
     });
 
-    msg.textContent = 'SUBMITTING TO SNAPSHOT...';
-
-    const envelope = {
-      address: voteWalletAddress,
-      sig,
-      data: {
-        domain,
-        types,
-        message
-      }
-    };
-
-    const submitRes = await fetch('https://hub.snapshot.org/api/msg', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(envelope)
-    });
-
-    const result = await submitRes.json();
-    if (result.id) {
+    if (receipt) {
       msg.textContent = `✓ VOTE SUBMITTED — ${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} VOTED.`;
       document.querySelectorAll('.vote-choice-btn').forEach(b => b.disabled = true);
       document.querySelectorAll('.token-checkbox').forEach(b => b.disabled = true);
       setTimeout(fetchVoteResults, 3000);
-    } else {
-      msg.textContent = '⚠ ' + (result.error_description || result.error || 'SUBMISSION FAILED. TRY AGAIN.');
-      document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
-      voteSelectedChoice = null;
-      console.error(result);
     }
   } catch(e) {
-    msg.textContent = '⚠ ' + (e.message || 'VOTE FAILED.').toUpperCase();
+    msg.textContent = '⚠ ' + (e.message || 'VOTE FAILED. TRY AGAIN.').toUpperCase();
     document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
     voteSelectedChoice = null;
     console.error(e);
