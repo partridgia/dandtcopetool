@@ -578,7 +578,8 @@
     <!-- Token selector — shown after connect -->
     <div id="vote-token-section" style="display:none;">
       <div class="m-label" style="margin-bottom:12px; letter-spacing:2px;">YOUR CITIZENS</div>
-      <div id="vote-token-list" style="margin-bottom:28px; font-size:6px; color:#CCFF00; line-height:3; letter-spacing:1px;"></div>
+      <div class="m-label" style="margin-bottom:16px; letter-spacing:1px; color:#444;">SELECT WHICH CITIZENS TO VOTE WITH</div>
+      <div id="vote-token-list" style="margin-bottom:28px;"></div>
 
       <div class="m-label" style="margin-bottom:16px; letter-spacing:2px;">YOUR VOTE</div>
       <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
@@ -595,6 +596,8 @@
           NO
         </button>
       </div>
+
+      <div id="vote-selected-count" style="font-size:6px; color:#555; letter-spacing:1px; line-height:2; margin-bottom:16px; text-transform:uppercase;"></div>
 
       <button id="btn-submit-vote" onclick="submitVote()" style="display:none;
         font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px;
@@ -709,43 +712,6 @@ async function connectVoteWallet() {
 }
 
 // ── Load citizen tokens held by wallet ────────
-async function loadCitizenTokens() {
-  const status = document.getElementById('vote-wallet-status');
-  status.textContent = status.textContent + ' — checking citizens...';
-
-  try {
-    // Use Alchemy NFT API to get tokens owned by wallet for this contract
-    const alchemyUrl = `https://eth-mainnet.g.alchemy.com/nft/v3/demo/getNFTsForOwner?owner=${voteWalletAddress}&contractAddresses[]=${CITIZEN_CONTRACT}&withMetadata=false`;
-    const res  = await fetch(alchemyUrl);
-    const data = await res.json();
-
-    if (!data.ownedNfts || data.ownedNfts.length === 0) {
-      document.getElementById('vote-token-list').innerHTML = '<div style="color:#555;">No citizen NFTs found in this wallet.</div>';
-      document.getElementById('vote-token-section').style.display = 'block';
-      return;
-    }
-
-    const tokens = data.ownedNfts.map(n => parseInt(n.tokenId, 10));
-
-    // Check which tokens have already voted
-    const votedTokens = await fetchVotedTokens(voteWalletAddress);
-    voteCitizenTokens = tokens.filter(t => !votedTokens.includes(t));
-    const alreadyVoted = tokens.filter(t => votedTokens.includes(t));
-
-    let html = '';
-    voteCitizenTokens.forEach(t => { html += `<div>CITIZEN #${t} — ELIGIBLE</div>`; });
-    alreadyVoted.forEach(t => { html += `<div style="color:#444;">CITIZEN #${t} — ALREADY VOTED</div>`; });
-    document.getElementById('vote-token-list').innerHTML = html;
-    document.getElementById('vote-token-section').style.display = 'block';
-
-    if (voteCitizenTokens.length === 0) {
-      document.getElementById('vote-msg').textContent = 'ALL YOUR CITIZENS HAVE ALREADY VOTED.';
-    }
-  } catch(e) {
-    status.textContent += ' — ERROR LOADING TOKENS';
-    console.error(e);
-  }
-}
 
 // ── Check which tokens already voted ──────────
 async function fetchVotedTokens(voter) {
@@ -773,38 +739,103 @@ async function fetchVotedTokens(voter) {
   } catch(e) { return []; }
 }
 
+async function loadCitizenTokens() {
+  const status = document.getElementById('vote-wallet-status');
+  status.textContent = status.textContent + ' — CHECKING CITIZENS...';
+
+  try {
+    const alchemyUrl = `https://eth-mainnet.g.alchemy.com/nft/v3/demo/getNFTsForOwner?owner=${voteWalletAddress}&contractAddresses[]=${CITIZEN_CONTRACT}&withMetadata=false`;
+    const res  = await fetch(alchemyUrl);
+    const data = await res.json();
+
+    if (!data.ownedNfts || data.ownedNfts.length === 0) {
+      document.getElementById('vote-token-list').innerHTML = '<div style="font-size:6px; color:#555; letter-spacing:1px; line-height:2;">NO CITIZEN NFTs FOUND IN THIS WALLET.</div>';
+      document.getElementById('vote-token-section').style.display = 'block';
+      return;
+    }
+
+    const allTokens = data.ownedNfts.map(n => parseInt(n.tokenId, 10));
+    const votedTokens = await fetchVotedTokens(voteWalletAddress);
+    voteCitizenTokens = allTokens.filter(t => !votedTokens.includes(t));
+    const alreadyVoted = allTokens.filter(t => votedTokens.includes(t));
+
+    const total = allTokens.length;
+    const eligible = voteCitizenTokens.length;
+    status.textContent = `CONNECTED: ${voteWalletAddress.slice(0,6)}...${voteWalletAddress.slice(-4)} — ${total} CITIZEN${total !== 1 ? 'S' : ''} FOUND, ${eligible} ELIGIBLE`;
+
+    let html = '';
+
+    if (eligible > 1) {
+      html += `<div style="margin-bottom:12px;">
+        <label style="font-size:6px; color:#CCFF00; letter-spacing:1px; line-height:3; cursor:pointer; display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" id="select-all-tokens" onchange="toggleSelectAll(this)" style="cursor:pointer;" checked>
+          SELECT ALL (${eligible} VOTES)
+        </label>
+      </div>`;
+    }
+
+    voteCitizenTokens.forEach(t => {
+      html += `<div style="margin-bottom:4px;">
+        <label style="font-size:6px; color:#CCFF00; letter-spacing:1px; line-height:3; cursor:pointer; display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" class="token-checkbox" value="${t}" onchange="updateSelectedCount()" style="cursor:pointer;" checked>
+          CITIZEN #${t}
+        </label>
+      </div>`;
+    });
+
+    alreadyVoted.forEach(t => {
+      html += `<div style="font-size:6px; color:#333; letter-spacing:1px; line-height:3;">CITIZEN #${t} — ALREADY VOTED</div>`;
+    });
+
+    document.getElementById('vote-token-list').innerHTML = html;
+    document.getElementById('vote-token-section').style.display = 'block';
+    updateSelectedCount();
+
+    if (eligible === 0) {
+      document.getElementById('vote-msg').textContent = 'ALL YOUR CITIZENS HAVE ALREADY VOTED.';
+    }
+  } catch(e) {
+    status.textContent += ' — ERROR LOADING TOKENS';
+    console.error(e);
+  }
+}
+
+function toggleSelectAll(cb) {
+  document.querySelectorAll('.token-checkbox').forEach(t => t.checked = cb.checked);
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  const checked = document.querySelectorAll('.token-checkbox:checked');
+  const countEl = document.getElementById('vote-selected-count');
+  if (checked.length === 0) {
+    countEl.textContent = 'SELECT AT LEAST ONE CITIZEN TO VOTE';
+  } else {
+    countEl.textContent = `${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} SELECTED — ${checked.length} VOTE${checked.length !== 1 ? 'S' : ''} WILL BE CAST`;
+  }
+  // Show submit only if choice and at least one token selected
+  const showSubmit = voteSelectedChoice !== null && checked.length > 0;
+  document.getElementById('btn-submit-vote').style.display = showSubmit ? 'block' : 'none';
+}
+
 // ── Select vote choice ─────────────────────────
 function selectVoteChoice(choice) {
   voteSelectedChoice = choice;
   document.querySelectorAll('.vote-choice-btn').forEach(b => {
     b.style.opacity = b.dataset.choice == choice ? '1' : '0.3';
   });
-  document.getElementById('btn-submit-vote').style.display = voteCitizenTokens.length > 0 ? 'block' : 'none';
+  updateSelectedCount();
 }
 
 // ── Submit vote via Snapshot ───────────────────
 async function submitVote() {
-  if (!voteWalletAddress || !voteSelectedChoice || voteCitizenTokens.length === 0) return;
+  const checked = Array.from(document.querySelectorAll('.token-checkbox:checked')).map(c => parseInt(c.value));
+  if (!voteWalletAddress || !voteSelectedChoice || checked.length === 0) return;
   const msg = document.getElementById('vote-msg');
-  msg.textContent = 'Preparing vote...';
+  msg.textContent = 'PREPARING VOTE...';
 
   try {
-    const domain = { name: 'snapshot', version: '0.1.4' };
-    const types = {
-      Vote: [
-        { name: 'from',     type: 'address' },
-        { name: 'space',    type: 'string'  },
-        { name: 'timestamp',type: 'uint64'  },
-        { name: 'proposal', type: 'bytes32' },
-        { name: 'choice',   type: 'uint32'  },
-        { name: 'reason',   type: 'string'  },
-        { name: 'app',      type: 'string'  },
-        { name: 'metadata', type: 'string'  }
-      ]
-    };
-
     const timestamp = Math.floor(Date.now() / 1000);
-    const metadata  = JSON.stringify({ tokenIds: voteCitizenTokens });
 
     const message = {
       from:      voteWalletAddress,
@@ -814,39 +845,69 @@ async function submitVote() {
       choice:    voteSelectedChoice,
       reason:    '',
       app:       'cope-tool',
-      metadata:  metadata
+      metadata:  JSON.stringify({ tokenIds: checked })
     };
 
-    msg.textContent = 'Please sign in your wallet...';
+    const domain = { name: 'snapshot', version: '0.1.4' };
+    const types = {
+      Vote: [
+        { name: 'from',      type: 'address' },
+        { name: 'space',     type: 'string'  },
+        { name: 'timestamp', type: 'uint64'  },
+        { name: 'proposal',  type: 'bytes32' },
+        { name: 'choice',    type: 'uint32'  },
+        { name: 'reason',    type: 'string'  },
+        { name: 'app',       type: 'string'  },
+        { name: 'metadata',  type: 'string'  }
+      ]
+    };
+
+    msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
 
     const sig = await window.ethereum.request({
       method: 'eth_signTypedData_v4',
-      params: [voteWalletAddress, JSON.stringify({ domain, types, message, primaryType: 'Vote' })]
+      params: [
+        voteWalletAddress,
+        JSON.stringify({
+          types: { EIP712Domain: [], Vote: types.Vote },
+          domain,
+          primaryType: 'Vote',
+          message
+        })
+      ]
     });
 
-    msg.textContent = 'Submitting to Snapshot...';
+    msg.textContent = 'SUBMITTING TO SNAPSHOT...';
+
+    const envelope = {
+      address: voteWalletAddress,
+      sig,
+      data: {
+        domain,
+        types,
+        message
+      }
+    };
 
     const submitRes = await fetch('https://hub.snapshot.org/api/msg', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        address: voteWalletAddress,
-        sig,
-        data: { domain, types, message }
-      })
+      body: JSON.stringify(envelope)
     });
 
     const result = await submitRes.json();
     if (result.id) {
-      msg.textContent = '✓ Vote submitted. Thank you.';
+      msg.textContent = `✓ VOTE SUBMITTED — ${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} VOTED.`;
       document.getElementById('btn-submit-vote').style.display = 'none';
       document.querySelectorAll('.vote-choice-btn').forEach(b => b.disabled = true);
+      document.querySelectorAll('.token-checkbox').forEach(b => b.disabled = true);
       setTimeout(fetchVoteResults, 3000);
     } else {
-      msg.textContent = '⚠ ' + (result.error || 'Submission failed. Try again.');
+      msg.textContent = '⚠ ' + (result.error_description || result.error || 'SUBMISSION FAILED. TRY AGAIN.');
+      console.error(result);
     }
   } catch(e) {
-    msg.textContent = '⚠ ' + (e.message || 'Vote failed.');
+    msg.textContent = '⚠ ' + (e.message || 'VOTE FAILED.').toUpperCase();
     console.error(e);
   }
 }
