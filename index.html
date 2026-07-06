@@ -714,30 +714,18 @@ async function loadCitizenTokens() {
   status.textContent = status.textContent + ' — checking citizens...';
 
   try {
-    // Use balanceOf + tokenOfOwnerByIndex via RPC
-    const rpc = 'https://eth.llamarpc.com';
-    const balHex = await rpcCall(rpc, 'eth_call', [{
-      to: CITIZEN_CONTRACT,
-      data: '0x70a08231' + voteWalletAddress.slice(2).padStart(64, '0')
-    }, 'latest']);
-    const balance = parseInt(balHex, 16);
+    // Use Alchemy NFT API to get tokens owned by wallet for this contract
+    const alchemyUrl = `https://eth-mainnet.g.alchemy.com/nft/v3/demo/getNFTsForOwner?owner=${voteWalletAddress}&contractAddresses[]=${CITIZEN_CONTRACT}&withMetadata=false`;
+    const res  = await fetch(alchemyUrl);
+    const data = await res.json();
 
-    if (balance === 0) {
-      document.getElementById('vote-token-list').textContent = 'No citizen NFTs found in this wallet.';
+    if (!data.ownedNfts || data.ownedNfts.length === 0) {
+      document.getElementById('vote-token-list').innerHTML = '<div style="color:#555;">No citizen NFTs found in this wallet.</div>';
       document.getElementById('vote-token-section').style.display = 'block';
       return;
     }
 
-    // Fetch tokenOfOwnerByIndex for each token
-    const tokens = [];
-    for (let i = 0; i < balance; i++) {
-      const idxHex = i.toString(16).padStart(64, '0');
-      const tidHex = await rpcCall(rpc, 'eth_call', [{
-        to: CITIZEN_CONTRACT,
-        data: '0x2f745c59' + voteWalletAddress.slice(2).padStart(64, '0') + idxHex
-      }, 'latest']);
-      tokens.push(parseInt(tidHex, 16));
-    }
+    const tokens = data.ownedNfts.map(n => parseInt(n.tokenId, 10));
 
     // Check which tokens have already voted
     const votedTokens = await fetchVotedTokens(voteWalletAddress);
@@ -745,16 +733,16 @@ async function loadCitizenTokens() {
     const alreadyVoted = tokens.filter(t => votedTokens.includes(t));
 
     let html = '';
-    voteCitizenTokens.forEach(t => { html += `<div>Citizen #${t} — eligible to vote</div>`; });
-    alreadyVoted.forEach(t => { html += `<div style="color:#444;">Citizen #${t} — already voted</div>`; });
+    voteCitizenTokens.forEach(t => { html += `<div>CITIZEN #${t} — ELIGIBLE</div>`; });
+    alreadyVoted.forEach(t => { html += `<div style="color:#444;">CITIZEN #${t} — ALREADY VOTED</div>`; });
     document.getElementById('vote-token-list').innerHTML = html;
     document.getElementById('vote-token-section').style.display = 'block';
 
     if (voteCitizenTokens.length === 0) {
-      document.getElementById('vote-msg').textContent = 'All your citizens have already voted.';
+      document.getElementById('vote-msg').textContent = 'ALL YOUR CITIZENS HAVE ALREADY VOTED.';
     }
   } catch(e) {
-    status.textContent += ' — error loading tokens';
+    status.textContent += ' — ERROR LOADING TOKENS';
     console.error(e);
   }
 }
