@@ -586,13 +586,13 @@
           style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#CCFF00; border:1px solid #CCFF00; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
           YES
         </button>
+        <button class="vote-choice-btn" data-choice="3" onclick="selectVoteChoice(3)"
+          style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#888; border:1px solid #555; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
+          MAYBE
+        </button>
         <button class="vote-choice-btn" data-choice="2" onclick="selectVoteChoice(2)"
           style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#ff4444; border:1px solid #ff4444; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
           NO
-        </button>
-        <button class="vote-choice-btn" data-choice="3" onclick="selectVoteChoice(3)"
-          style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#888; border:1px solid #555; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
-          DEPENDS
         </button>
       </div>
 
@@ -634,7 +634,7 @@
 
     <div style="margin-bottom: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
-        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555; letter-spacing:2px;">DEPENDS</span>
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555; letter-spacing:2px;">MAYBE</span>
         <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555;" id="dep-count">—</span>
       </div>
       <div style="height:2px; background:#222; width:100%;">
