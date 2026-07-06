@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Death and Taxes — C.O.P.E. Tool</title>
+<title>Death and Taxes — C.O.P.E.</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,7 +88,7 @@
   .m-subheading { font-size: 8px; letter-spacing: 2px; color: var(--yellow-bg); margin-bottom: 24px; margin-top: 8px; }
   .m-block { margin-bottom: 28px; }
   .m-label { font-size: var(--fs-sm); color: #555; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; line-height: 2; }
-  .m-text { font-size: var(--fs-sm); line-height: 2.4; color: var(--yellow-text); }
+  .m-text { font-size: var(--fs-sm); line-height: 2.4; color: var(--yellow-text); font-family: var(--mono); letter-spacing: 1px; }
   .m-divider { border: none; border-top: 1px solid #222; margin: 28px 0; }
 
   /* ── TIMING TABLE ── */
@@ -136,14 +136,12 @@
 <div class="header-outer">
   <header>
     <div class="logo">DEATH AND TAXES</div>
-    <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.) TOOL</div>
+    <div class="subtitle">COLLECTIVE OUTCOME PARAMETER EXPLORATION (C.O.P.E.)</div>
     <div class="tab-nav-wrap">
       <nav class="tab-nav">
-        <button class="tab-btn active" onclick="showTab('manifesto')">MANIFESTO</button>
+        <button class="tab-btn active" onclick="showTab('vote')">VOTE</button>
         <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
-        <button class="tab-btn" onclick="showTab('howitworks')">HOW IT WORKS</button>
-        <button class="tab-btn" onclick="showTab('scenarios')">SCENARIOS</button>
-        <button class="tab-btn" onclick="showTab('contract')">CONTRACT</button>
+        <button class="tab-btn" onclick="showTab('manifesto')">MANIFESTO</button>
       </nav>
     </div>
   </header>
@@ -166,9 +164,9 @@
           </div>
         </div>
         <div class="header-row">
-          <span class="header-label">1/69 clearing price</span>
+          <span class="header-label">Assumed NFT value</span>
           <div class="header-input-wrap">
-            <input class="header-input" type="number" id="citizenVal" value="2" min="0" step="0.1">
+            <input class="header-input" type="number" id="citizenVal" value="3" min="0" step="0.1">
             <span class="header-unit">ETH</span>
           </div>
         </div>
@@ -196,15 +194,30 @@
 </div>
 
 <!-- ── MANIFESTO ── -->
-<div id="panel-manifesto" class="content-panel active">
+<div id="panel-manifesto" class="content-panel">
   <div style="padding: 8px 0 0;">
+
+    <div style="padding-bottom: 40px; border-bottom: 1px solid var(--yellow-text); margin-bottom: 40px;">
+      <div class="m-text" style="letter-spacing: 3px; line-height: 3;">THE GAME ENDS<br>WHEN ENOUGH OF YOU<br>DECIDE IT DOES.</div>
+    </div>
+
     <div class="m-text" style="margin-bottom: 40px;">Every day you hold a citizen NFT you pay taxes.</div>
     <div class="m-text" style="margin-bottom: 40px;">No end date.</div>
     <div class="m-text" style="margin-bottom: 40px;">No guarantee you make it to the final 69.</div>
     <div class="m-text" style="margin-bottom: 40px;">C.O.P.E. lets citizens agree to end the game together.</div>
-    <div style="padding-top: 40px; border-top: 1px solid var(--yellow-text);">
-      <div class="m-text" style="letter-spacing: 3px; line-height: 3;">THE GAME ENDS<br>WHEN ENOUGH OF YOU<br>DECIDE IT DOES.</div>
+
+    <hr class="m-divider">
+
+    <div class="m-block">
+      <div class="m-label">What is this?</div>
+      <div class="m-text">Death and Taxes is a game of survival. Citizens die. The last 69 standing share the treasury. But what if you could negotiate your fate instead of waiting for the taxman?</div>
     </div>
+
+    <div class="m-block">
+      <div class="m-label">The offer</div>
+      <div class="m-text">The C.O.P.E. settlement contract lets a group of citizens agree to resolve the game together — before the natural end. You deposit your citizen NFT and collectively decide who lives and who is left to die. In return, everyone in the settlement gets a guaranteed share of the treasury.</div>
+    </div>
+
   </div>
 </div>
 
@@ -546,6 +559,315 @@
 
 </div>
 
+<div id="panel-vote" class="content-panel">
+  <div class="section-title">SIGNAL YOUR INTENT</div>
+
+  <div class="m-block">
+    <div class="m-text" style="line-height:2.8; text-transform:uppercase; letter-spacing:1px;">Would you be open to exploring a collaborative end to Death and Taxes, such as C.O.P.E. or similar strategy?</div>
+  </div>
+
+  <!-- Wallet connect + vote -->
+  <div id="vote-connect-section">
+    <div id="vote-wallet-status" style="margin-bottom:20px; font-size:6px; color:#555; letter-spacing:2px; line-height:2; text-transform:uppercase;"></div>
+
+    <button id="btn-connect" onclick="connectVoteWallet()"
+      style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:#D4FF00; color:#000; border:none; padding:14px 24px; cursor:pointer; margin-bottom:28px; text-transform:uppercase;">
+      CONNECT WALLET
+    </button>
+
+    <!-- Token selector — shown after connect -->
+    <div id="vote-token-section" style="display:none;">
+      <div class="m-label" style="margin-bottom:12px; letter-spacing:2px;">YOUR CITIZENS</div>
+      <div id="vote-token-list" style="margin-bottom:28px; font-size:6px; color:#CCFF00; line-height:3; letter-spacing:1px;"></div>
+
+      <div class="m-label" style="margin-bottom:16px; letter-spacing:2px;">YOUR VOTE</div>
+      <div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
+        <button class="vote-choice-btn" data-choice="1" onclick="selectVoteChoice(1)"
+          style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#CCFF00; border:1px solid #CCFF00; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
+          YES
+        </button>
+        <button class="vote-choice-btn" data-choice="2" onclick="selectVoteChoice(2)"
+          style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#ff4444; border:1px solid #ff4444; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
+          NO
+        </button>
+        <button class="vote-choice-btn" data-choice="3" onclick="selectVoteChoice(3)"
+          style="font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px; background:none; color:#888; border:1px solid #555; padding:12px 20px; cursor:pointer; text-transform:uppercase;">
+          DEPENDS
+        </button>
+      </div>
+
+      <button id="btn-submit-vote" onclick="submitVote()" style="display:none;
+        font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px;
+        background:#D4FF00; color:#000; border:none; padding:14px 24px; cursor:pointer; margin-bottom:16px; text-transform:uppercase;">
+        SUBMIT VOTE
+      </button>
+
+      <div id="vote-msg" style="font-size:6px; color:#CCFF00; letter-spacing:1px; line-height:2.4; margin-top:12px; text-transform:uppercase;"></div>
+    </div>
+  </div>
+
+  <hr class="m-divider">
+
+  <!-- Live results -->
+  <div id="vote-results" style="margin-bottom: 32px;">
+    <div class="m-label" style="margin-bottom:20px; letter-spacing:2px;">CURRENT SIGNAL — <span id="total-voted">—</span> CITIZENS VOTED</div>
+
+    <div style="margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#CCFF00; letter-spacing:2px;">YES</span>
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#CCFF00;" id="yes-count">—</span>
+      </div>
+      <div style="height:2px; background:#222; width:100%;">
+        <div id="yes-bar" style="height:2px; background:#CCFF00; width:0%; transition:width 0.6s;"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#ff4444; letter-spacing:2px;">NO</span>
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#ff4444;" id="no-count">—</span>
+      </div>
+      <div style="height:2px; background:#222; width:100%;">
+        <div id="no-bar" style="height:2px; background:#ff4444; width:0%; transition:width 0.6s;"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555; letter-spacing:2px;">DEPENDS</span>
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555;" id="dep-count">—</span>
+      </div>
+      <div style="height:2px; background:#222; width:100%;">
+        <div id="dep-bar" style="height:2px; background:#555; width:0%; transition:width 0.6s;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Snapshot vote config ──────────────────────
+const SNAPSHOT_PROPOSAL = '0x7242d08421c8ce67a99af4423da3a0adbe16712ebabbe4d4aa5e412f70b661af';
+const SNAPSHOT_SPACE    = 'citizenstrategy.eth';
+const SNAPSHOT_API      = 'https://hub.snapshot.org/graphql';
+const CITIZEN_CONTRACT  = '0x4F249b2DC6Cecbd549A0C354BBFc4919E8C5D3aE';
+
+let voteWalletAddress  = null;
+let voteSelectedChoice = null;
+let voteCitizenTokens  = [];
+
+// ── Fetch and display live results ────────────
+async function fetchVoteResults() {
+  try {
+    const query = `{
+      proposal(id:"${SNAPSHOT_PROPOSAL}") {
+        scores
+        scores_total
+        choices
+      }
+    }`;
+    const res  = await fetch(SNAPSHOT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+    const data = await res.json();
+    const p    = data.data.proposal;
+    if (!p) return;
+
+    const scores = p.scores;
+    const total  = p.scores_total || 0;
+
+    document.getElementById('total-voted').textContent = Math.round(total);
+    document.getElementById('yes-count').textContent   = Math.round(scores[0] || 0);
+    document.getElementById('no-count').textContent    = Math.round(scores[1] || 0);
+    document.getElementById('dep-count').textContent   = Math.round(scores[2] || 0);
+
+    const pct = (n) => total > 0 ? ((n / total) * 100).toFixed(1) + '%' : '0%';
+    document.getElementById('yes-bar').style.width = pct(scores[0] || 0);
+    document.getElementById('no-bar').style.width  = pct(scores[1] || 0);
+    document.getElementById('dep-bar').style.width = pct(scores[2] || 0);
+  } catch(e) {
+    console.error('Failed to fetch vote results', e);
+  }
+}
+
+// ── Connect wallet ────────────────────────────
+async function connectVoteWallet() {
+  if (!window.ethereum) {
+    document.getElementById('vote-wallet-status').textContent = '⚠ No wallet detected. Please install MetaMask.';
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    voteWalletAddress = accounts[0];
+    document.getElementById('vote-wallet-status').textContent = 'Connected: ' + voteWalletAddress.slice(0,6) + '...' + voteWalletAddress.slice(-4);
+    document.getElementById('btn-connect').style.display = 'none';
+    await loadCitizenTokens();
+  } catch(e) {
+    document.getElementById('vote-wallet-status').textContent = '⚠ Connection rejected.';
+  }
+}
+
+// ── Load citizen tokens held by wallet ────────
+async function loadCitizenTokens() {
+  const status = document.getElementById('vote-wallet-status');
+  status.textContent = status.textContent + ' — checking citizens...';
+
+  try {
+    // Use balanceOf + tokenOfOwnerByIndex via RPC
+    const rpc = 'https://eth.llamarpc.com';
+    const balHex = await rpcCall(rpc, 'eth_call', [{
+      to: CITIZEN_CONTRACT,
+      data: '0x70a08231' + voteWalletAddress.slice(2).padStart(64, '0')
+    }, 'latest']);
+    const balance = parseInt(balHex, 16);
+
+    if (balance === 0) {
+      document.getElementById('vote-token-list').textContent = 'No citizen NFTs found in this wallet.';
+      document.getElementById('vote-token-section').style.display = 'block';
+      return;
+    }
+
+    // Fetch tokenOfOwnerByIndex for each token
+    const tokens = [];
+    for (let i = 0; i < balance; i++) {
+      const idxHex = i.toString(16).padStart(64, '0');
+      const tidHex = await rpcCall(rpc, 'eth_call', [{
+        to: CITIZEN_CONTRACT,
+        data: '0x2f745c59' + voteWalletAddress.slice(2).padStart(64, '0') + idxHex
+      }, 'latest']);
+      tokens.push(parseInt(tidHex, 16));
+    }
+
+    // Check which tokens have already voted
+    const votedTokens = await fetchVotedTokens(voteWalletAddress);
+    voteCitizenTokens = tokens.filter(t => !votedTokens.includes(t));
+    const alreadyVoted = tokens.filter(t => votedTokens.includes(t));
+
+    let html = '';
+    voteCitizenTokens.forEach(t => { html += `<div>Citizen #${t} — eligible to vote</div>`; });
+    alreadyVoted.forEach(t => { html += `<div style="color:#444;">Citizen #${t} — already voted</div>`; });
+    document.getElementById('vote-token-list').innerHTML = html;
+    document.getElementById('vote-token-section').style.display = 'block';
+
+    if (voteCitizenTokens.length === 0) {
+      document.getElementById('vote-msg').textContent = 'All your citizens have already voted.';
+    }
+  } catch(e) {
+    status.textContent += ' — error loading tokens';
+    console.error(e);
+  }
+}
+
+// ── Check which tokens already voted ──────────
+async function fetchVotedTokens(voter) {
+  try {
+    const query = `{
+      votes(where: { proposal: "${SNAPSHOT_PROPOSAL}", voter: "${voter}" }) {
+        metadata
+      }
+    }`;
+    const res  = await fetch(SNAPSHOT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+    const data = await res.json();
+    const votes = data.data.votes || [];
+    const tokenIds = [];
+    votes.forEach(v => {
+      try {
+        const meta = JSON.parse(v.metadata || '{}');
+        if (meta.tokenIds) tokenIds.push(...meta.tokenIds);
+      } catch(e) {}
+    });
+    return tokenIds;
+  } catch(e) { return []; }
+}
+
+// ── Select vote choice ─────────────────────────
+function selectVoteChoice(choice) {
+  voteSelectedChoice = choice;
+  document.querySelectorAll('.vote-choice-btn').forEach(b => {
+    b.style.opacity = b.dataset.choice == choice ? '1' : '0.3';
+  });
+  document.getElementById('btn-submit-vote').style.display = voteCitizenTokens.length > 0 ? 'block' : 'none';
+}
+
+// ── Submit vote via Snapshot ───────────────────
+async function submitVote() {
+  if (!voteWalletAddress || !voteSelectedChoice || voteCitizenTokens.length === 0) return;
+  const msg = document.getElementById('vote-msg');
+  msg.textContent = 'Preparing vote...';
+
+  try {
+    const domain = { name: 'snapshot', version: '0.1.4' };
+    const types = {
+      Vote: [
+        { name: 'from',     type: 'address' },
+        { name: 'space',    type: 'string'  },
+        { name: 'timestamp',type: 'uint64'  },
+        { name: 'proposal', type: 'bytes32' },
+        { name: 'choice',   type: 'uint32'  },
+        { name: 'reason',   type: 'string'  },
+        { name: 'app',      type: 'string'  },
+        { name: 'metadata', type: 'string'  }
+      ]
+    };
+
+    const timestamp = Math.floor(Date.now() / 1000);
+    const metadata  = JSON.stringify({ tokenIds: voteCitizenTokens });
+
+    const message = {
+      from:      voteWalletAddress,
+      space:     SNAPSHOT_SPACE,
+      timestamp: timestamp,
+      proposal:  SNAPSHOT_PROPOSAL,
+      choice:    voteSelectedChoice,
+      reason:    '',
+      app:       'cope-tool',
+      metadata:  metadata
+    };
+
+    msg.textContent = 'Please sign in your wallet...';
+
+    const sig = await window.ethereum.request({
+      method: 'eth_signTypedData_v4',
+      params: [voteWalletAddress, JSON.stringify({ domain, types, message, primaryType: 'Vote' })]
+    });
+
+    msg.textContent = 'Submitting to Snapshot...';
+
+    const submitRes = await fetch('https://hub.snapshot.org/api/msg', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        address: voteWalletAddress,
+        sig,
+        data: { domain, types, message }
+      })
+    });
+
+    const result = await submitRes.json();
+    if (result.id) {
+      msg.textContent = '✓ Vote submitted. Thank you.';
+      document.getElementById('btn-submit-vote').style.display = 'none';
+      document.querySelectorAll('.vote-choice-btn').forEach(b => b.disabled = true);
+      setTimeout(fetchVoteResults, 3000);
+    } else {
+      msg.textContent = '⚠ ' + (result.error || 'Submission failed. Try again.');
+    }
+  } catch(e) {
+    msg.textContent = '⚠ ' + (e.message || 'Vote failed.');
+    console.error(e);
+  }
+}
+
+// Fetch results on load and when vote tab opened
+fetchVoteResults();
+setInterval(fetchVoteResults, 30000);
+</script>
+
 <footer>
   BUILT BY <a href="https://x.com/_smartie118" target="_blank">_SMARTIE</a>
 </footer>
@@ -565,7 +887,7 @@ function showTab(name) {
   const panel = document.getElementById('panel-' + name);
   panel.style.display = 'block';
   panel.classList.add('active');
-  const idx = ['manifesto','cope','howitworks','scenarios','contract'].indexOf(name);
+  const idx = ['vote','cope','manifesto'].indexOf(name);
   const activeBtn = document.querySelectorAll('.tab-btn')[idx];
   activeBtn.classList.add('active');
   // Scroll active tab to centre of nav bar
@@ -576,7 +898,7 @@ function showTab(name) {
   nav.scrollTo({ left: btnLeft - (navWidth / 2) + (btnWidth / 2), behavior: 'smooth' });
 }
 
-showTab('manifesto');
+showTab('vote');
 
 async function rpcCall(url, method, params) {
   const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
