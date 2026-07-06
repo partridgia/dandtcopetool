@@ -599,12 +599,6 @@
 
       <div id="vote-selected-count" style="font-size:6px; color:#555; letter-spacing:1px; line-height:2; margin-bottom:16px; text-transform:uppercase;"></div>
 
-      <button id="btn-submit-vote" onclick="submitVote()" style="display:none;
-        font-family:'Press Start 2P',monospace; font-size:6px; letter-spacing:2px;
-        background:#D4FF00; color:#000; border:none; padding:14px 24px; cursor:pointer; margin-bottom:16px; text-transform:uppercase;">
-        SUBMIT VOTE
-      </button>
-
       <div id="vote-msg" style="font-size:6px; color:#CCFF00; letter-spacing:1px; line-height:2.4; margin-top:12px; text-transform:uppercase;"></div>
     </div>
   </div>
@@ -813,18 +807,16 @@ function updateSelectedCount() {
   } else {
     countEl.textContent = `${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} SELECTED — ${checked.length} VOTE${checked.length !== 1 ? 'S' : ''} WILL BE CAST`;
   }
-  // Show submit only if choice and at least one token selected
-  const showSubmit = voteSelectedChoice !== null && checked.length > 0;
-  document.getElementById('btn-submit-vote').style.display = showSubmit ? 'block' : 'none';
 }
 
-// ── Select vote choice ─────────────────────────
+// ── Select vote choice — triggers wallet immediately ───
 function selectVoteChoice(choice) {
   voteSelectedChoice = choice;
   document.querySelectorAll('.vote-choice-btn').forEach(b => {
     b.style.opacity = b.dataset.choice == choice ? '1' : '0.3';
+    b.disabled = true;
   });
-  updateSelectedCount();
+  submitVote();
 }
 
 // ── Submit vote via Snapshot ───────────────────
@@ -898,16 +890,19 @@ async function submitVote() {
     const result = await submitRes.json();
     if (result.id) {
       msg.textContent = `✓ VOTE SUBMITTED — ${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} VOTED.`;
-      document.getElementById('btn-submit-vote').style.display = 'none';
       document.querySelectorAll('.vote-choice-btn').forEach(b => b.disabled = true);
       document.querySelectorAll('.token-checkbox').forEach(b => b.disabled = true);
       setTimeout(fetchVoteResults, 3000);
     } else {
       msg.textContent = '⚠ ' + (result.error_description || result.error || 'SUBMISSION FAILED. TRY AGAIN.');
+      document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
+      voteSelectedChoice = null;
       console.error(result);
     }
   } catch(e) {
     msg.textContent = '⚠ ' + (e.message || 'VOTE FAILED.').toUpperCase();
+    document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
+    voteSelectedChoice = null;
     console.error(e);
   }
 }
