@@ -102,11 +102,18 @@
   .anim-btn:disabled { opacity: 0.4; cursor: default; }
   .anim-heading { font-family: var(--mono); font-size: 7px; letter-spacing: 1px; color: var(--yellow-text); margin-bottom: 10px; text-transform: uppercase; }
   .anim-grid { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 5px; overflow: hidden; }
-  .anim-box { flex: 1; border: 1px solid #333; padding: 10px; transition: opacity 0.4s ease; }
+  .anim-box { flex: 1; min-width: 0; border: 1px solid #333; padding: 10px; transition: opacity 0.4s ease; }
   .anim-box-title { font-family: var(--mono); font-size: 6px; letter-spacing: 1px; color: var(--yellow-text); text-transform: uppercase; line-height: 1.8; }
   .anim-box-sub { font-family: var(--mono); font-size: 5px; letter-spacing: 1px; color: #666; margin-bottom: 10px; text-transform: uppercase; }
   .anim-treasury { border: 1px solid; padding: 10px; margin-bottom: 16px; transition: opacity 0.4s ease; }
   .anim-treasury-title { font-family: var(--mono); font-size: 6px; letter-spacing: 1px; margin-bottom: 8px; text-align: center; text-transform: uppercase; }
+  .anim-contracts-row { display: flex; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 520px) {
+    .anim-contracts-row { flex-direction: column; }
+    .anim-grid-tall { min-height: 90px !important; }
+    #pool { min-height: 100px !important; }
+    .anim-btn { padding: 8px 10px; }
+  }
 
   /* ── TIMING TABLE ── */
   .timing-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -213,6 +220,7 @@
 
 <!-- ── MANIFESTO ── -->
 <div id="panel-manifesto" class="content-panel">
+  <div class="section-title">MECHANICS</div>
   <div style="padding: 8px 0 0;">
 
     <div id="cope-anim-stage" style="position:relative; background:#000; padding:4px 0; overflow:visible; margin-bottom:8px;">
@@ -225,24 +233,24 @@
       </div>
 
       <div class="anim-heading">CITIZENS CONTRACT (<span id="poolCount">108</span>)</div>
-      <div id="pool" class="anim-grid" style="height:132px; margin-bottom:20px;"></div>
+      <div id="pool" class="anim-grid" style="min-height:132px; margin-bottom:20px;"></div>
 
-      <div style="display:flex; gap:12px; margin-bottom:16px;">
+      <div class="anim-contracts-row">
         <div id="citizenBox" class="anim-box">
           <div class="anim-box-title">CITIZEN + ETH (<span id="citCount">0</span>/<span id="citTarget">0</span>)</div>
           <div class="anim-box-sub">C.O.P.E. CONTRACT A</div>
-          <div id="citizen" class="anim-grid" style="height:132px;"></div>
+          <div id="citizen" class="anim-grid" style="min-height:132px;"></div>
         </div>
         <div id="evaderBox" class="anim-box">
           <div class="anim-box-title">EVADER + MORE ETH (<span id="evaCount">0</span>/0)</div>
           <div class="anim-box-sub">C.O.P.E. CONTRACT B</div>
-          <div id="evader" class="anim-grid" style="height:132px;"></div>
+          <div id="evader" class="anim-grid" style="min-height:132px;"></div>
         </div>
       </div>
 
       <div id="gameTreasuryBox" class="anim-treasury" style="border-color:#ff4444;">
         <div class="anim-treasury-title" style="color:#ff4444;">GAME TREASURY</div>
-        <div id="gtDots" style="display:flex; flex-wrap:wrap; align-content:flex-start; gap:4px; justify-content:center; height:40px; overflow:hidden;"></div>
+        <div id="gtDots" style="display:flex; flex-wrap:wrap; align-content:flex-start; gap:4px; justify-content:center; min-height:40px;"></div>
       </div>
 
       <div id="copeTreasuryBox" class="anim-treasury" style="border-color:var(--yellow-text);">
@@ -257,7 +265,7 @@
 
       <div>
         <div class="anim-heading">EVADERS CONTRACT (<span id="evaFinalCount">0</span>)</div>
-        <div id="evaderFinalGrid" class="anim-grid" style="height:50px;"></div>
+        <div id="evaderFinalGrid" class="anim-grid" style="min-height:50px;"></div>
       </div>
     </div>
 
@@ -266,7 +274,7 @@
 
     <div class="m-block">
       <div class="m-label">Phase 1</div>
-      <div class="m-text">Citizens choose to enter one of the C.O.P.E. contracts which have a minimum consensus level of 69 combined (or current population minus 39). Contract A (C.O.P.E. Citizens) is for those who wish to retain one of the final 69 NFTs but take a smaller treasury share. Contract B (C.O.P.E. Evaders) is for those willing to take a larger treasury share but let their Citizen die and have an Evader returned. For the purpose of C.O.P.E. NFTs are assumed to have a value of 3 ETH (TBC) so Contract B participants would receive 3 ETH (TBC) more than Contract A participants. The IRS runs an automatic bailout schedule for all citizens in either contract from the moment they join — this encourages participation and minimises contract complexity.</div>
+      <div class="m-text">Citizens choose to enter one of the C.O.P.E. contracts which have a minimum consensus level of 69 combined (or current population minus 39). Contract A (C.O.P.E. Citizens) is for those who wish to retain one of the final 69 NFTs but take a smaller treasury share. Contract B (C.O.P.E. Evaders) is for those willing to take a larger treasury share but let their Citizen die and have an Evader returned. For the purpose of C.O.P.E. NFTs are assumed to have a value of 3 ETH (TBC) so Contract B participants would receive 3 ETH (TBC) more than Contract A participants.<br><br>The IRS runs an automatic bailout schedule for all citizens in either contract from the moment they join — this encourages participation and minimises contract complexity.<br><br>Once you have entered the C.O.P.E. ecosystem you cannot exit until the Death and Taxes game is over. You can move between Contract A and B, so long as the destination Contract is not at capacity.</div>
     </div>
 
     <div class="m-block">
@@ -276,7 +284,7 @@
 
     <div class="m-block">
       <div class="m-label">Phase 3</div>
-      <div class="m-text">Once C.O.P.E. the contract is closed (on an Epoch change), the Contract B Citizens are delinquent and killed by the IRS. Contract A claims proportions of the game treasury for all citizens within it, this is then split in accordance with the agreed structure with those participants in Contract B.</div>
+      <div class="m-text">Once the C.O.P.E. contract decides to end the game (on an Epoch change), the Contract B Citizens are delinquent and killed by the IRS. Contract A claims proportions of the game treasury for all citizens within it, this is then split in accordance with the agreed structure with those participants in Contract B.</div>
     </div>
 
     <div class="m-block">
@@ -284,6 +292,41 @@
       <div class="m-text">With all treasury claimed and allocated, NFTs and treasury shares are redeemed by or returned to their owners. On exit there will be an option to collect an exclusive participants edition by m0dest for 0.969 via an allowlisted mint page (allocation of 1 per NFT entered).</div>
     </div>
 
+  </div>
+</div>
+
+<!-- ── FAQ ── -->
+<div id="panel-faq" class="content-panel">
+  <div class="section-title">FAQ</div>
+
+  <div class="m-block">
+    <div class="m-label">Would this be safe?</div>
+    <div class="m-text">Yes. If progressed, the contractual elements would be prepared by Transient Labs.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">What are the benefits of entering?</div>
+    <div class="m-text">End the game, guaranteed return, no more tax payments, being part of a community action, and the option of an exclusive m0dest edition.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">How do we make this happen?</div>
+    <div class="m-text">Cast a vote and show your support.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">I have multiple Citizens, why should I enter them?</div>
+    <div class="m-text">Any NFTs entered bring the game closer to an end. You could enter some and retain one outside the collective agreement, for which you would receive the full treasury and NFT once C.O.P.E. is closed.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">I only have one Citizen, why should I enter it?</div>
+    <div class="m-text">Entering guarantees a return, continuing to play does not. You may have paid more in tax than would be returned through this mechanism based on your joining date or tax payment strategy.</div>
+  </div>
+
+  <div class="m-block">
+    <div class="m-label">I'm a whale, why would I join?</div>
+    <div class="m-text">Pay less tax, ease administrative burden, put liquidity to other endeavours, and be part of a collective action. Once consensus is reached, daily tax payments would be made at a loss from that point onwards.</div>
   </div>
 </div>
 
@@ -1034,7 +1077,7 @@ function showTab(name) {
   const panel = document.getElementById('panel-' + name);
   panel.style.display = 'block';
   panel.classList.add('active');
-  const idx = ['vote','cope','manifesto'].indexOf(name);
+  const idx = ['vote','cope','manifesto','faq'].indexOf(name);
   const activeBtn = document.querySelectorAll('.tab-btn')[idx];
   activeBtn.classList.add('active');
   // Scroll active tab to centre of nav bar
@@ -1216,7 +1259,7 @@ fetchChain();
   const evaderFinalGrid = document.getElementById('evaderFinalGrid');
   const evaFinalCount = document.getElementById('evaFinalCount');
 
-  const SIZE = 18;
+  const SIZE = window.innerWidth < 520 ? 13 : 18;
   const P1_CIT = 30, P1_EVA = 39, P2_CIT = 15;
   const S1_POOL = 108 - (P1_CIT+P1_EVA);
   const S2_POOL = S1_POOL - P2_CIT;
