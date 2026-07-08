@@ -164,7 +164,7 @@
           </div>
         </div>
         <div class="header-row">
-          <span class="header-label">Assumed NFT value</span>
+          <span class="header-label">Assumed 1/69 citizen value</span>
           <div class="header-input-wrap">
             <input class="header-input" type="number" id="citizenVal" value="3" min="0" step="0.1">
             <span class="header-unit">ETH</span>
@@ -215,7 +215,7 @@
 
     <div class="m-block">
       <div class="m-label">The offer</div>
-      <div class="m-text">The C.O.P.E. settlement contract lets a group of citizens agree to resolve the game together — before the natural end. You deposit your citizen NFT and collectively decide who lives and who is left to die. In return, everyone in the settlement gets a guaranteed share of the treasury.</div>
+      <div class="m-text">The C.O.P.E. agreement would enable a group of citizens to resolve the game together — before the natural end. You deposit your citizen NFT and collectively decide those that make it to the final 69 and those that die. In return, everyone in the agreement gets an equal share based on the treasury split and NFT value (NFT+ETH or ETH only).</div>
     </div>
 
   </div>
@@ -560,16 +560,15 @@
 </div>
 
 <div id="panel-vote" class="content-panel">
-  <div class="section-title">SIGNAL YOUR INTENT</div>
+  <div class="section-title">PROPOSITION 69</div>
 
   <div class="m-block">
-    <div class="m-text" style="line-height:2.8; text-transform:uppercase; letter-spacing:1px;">Would you be open to exploring a collaborative end to Death and Taxes, such as C.O.P.E. or similar strategy?</div>
+    <div class="m-text" style="line-height:2.8; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;">Would you participate in a collaborative end to Death and Taxes?</div>
+    <div class="m-text" style="font-size:6px; color:#888; line-height:2.6; letter-spacing:1px;">We have proposed an incredible deal with the IRS — but we need a verified display of citizen support for them to consider. Votes are token-gated to current citizen holders (or their delegate.xyz wallet). Vote now.</div>
   </div>
 
   <!-- Wallet connect + vote -->
   <div id="vote-connect-section">
-    <div class="m-text" style="font-size:6px; color:#555; line-height:2.6; margin-bottom:24px; letter-spacing:1px;">Voting is gasless and grants no permissions — it is only a message signature. Voting power is based on a snapshot of wallets taken when the proposal was created — moving a citizen to another wallet now will not let that wallet vote.</div>
-
     <div id="vote-wallet-status" style="margin-bottom:20px; font-size:6px; color:#555; letter-spacing:2px; line-height:2; text-transform:uppercase;"></div>
 
     <button id="btn-connect" onclick="connectVoteWallet()"
@@ -608,7 +607,7 @@
   <hr class="m-divider">
 
   <!-- Live results -->
-  <div id="vote-results" style="margin-bottom: 32px;">
+  <div id="vote-results" style="margin-bottom: 24px;">
     <div class="m-label" style="margin-bottom:20px; letter-spacing:2px;">CURRENT SIGNAL — <span id="total-voted">—</span> CITIZENS VOTED</div>
 
     <div style="margin-bottom: 20px;">
@@ -623,6 +622,16 @@
 
     <div style="margin-bottom: 20px;">
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#888; letter-spacing:2px;">MAYBE</span>
+        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#888;" id="dep-count">—</span>
+      </div>
+      <div style="height:2px; background:#222; width:100%;">
+        <div id="dep-bar" style="height:2px; background:#888; width:0%; transition:width 0.6s;"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
         <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#ff4444; letter-spacing:2px;">NO</span>
         <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#ff4444;" id="no-count">—</span>
       </div>
@@ -630,22 +639,14 @@
         <div id="no-bar" style="height:2px; background:#ff4444; width:0%; transition:width 0.6s;"></div>
       </div>
     </div>
-
-    <div style="margin-bottom: 20px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
-        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555; letter-spacing:2px;">MAYBE</span>
-        <span style="font-family:'Press Start 2P',monospace; font-size:6px; color:#555;" id="dep-count">—</span>
-      </div>
-      <div style="height:2px; background:#222; width:100%;">
-        <div id="dep-bar" style="height:2px; background:#555; width:0%; transition:width 0.6s;"></div>
-      </div>
-    </div>
   </div>
+
+  <div class="m-text" style="font-size:6px; color:#555; line-height:2.6; letter-spacing:1px;">Voting is gasless and grants no permissions — it is only a message signature. Voting power is based on a snapshot of wallets taken when the proposal was created — moving a citizen to a hot wallet now will not let that wallet vote. Delegate.xyz wallets should be included if they have been set up previously.</div>
 </div>
 
 <script>
 // ── Snapshot vote config ──────────────────────
-const SNAPSHOT_PROPOSAL = '0x22d7d082b7886961d16eb1768b9210303cd317a3d162d91e294b6e158c6a4fb8';
+const SNAPSHOT_PROPOSAL = '0xd513c9891806b9d9b4796f8cf520059cbc4ac519b5a0eb6914e236e186d9d1e0';
 const SNAPSHOT_SPACE    = 'citizenstrategy.eth';
 const SNAPSHOT_API      = 'https://hub.snapshot.org/graphql';
 const CITIZEN_CONTRACT  = '0x4F249b2DC6Cecbd549A0C354BBFc4919E8C5D3aE';
@@ -709,7 +710,12 @@ async function fetchVoteResults() {
 // ── Connect wallet ────────────────────────────
 async function connectVoteWallet() {
   if (!window.ethereum) {
-    document.getElementById('vote-wallet-status').textContent = '⚠ No wallet detected. Please install MetaMask.';
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      document.getElementById('vote-wallet-status').textContent = 'PLEASE OPEN THIS SITE DIRECTLY IN YOUR WALLET BROWSER TO VOTE ON MOBILE.';
+    } else {
+      document.getElementById('vote-wallet-status').textContent = '⚠ NO WALLET DETECTED. PLEASE INSTALL METAMASK.';
+    }
     return;
   }
   try {
@@ -837,84 +843,100 @@ function selectVoteChoice(choice) {
   submitVote();
 }
 
-// ── Submit vote via Snapshot (official SDK) ────
+// ── Checksum an address (minimal EIP-55) ───────
+function toChecksumAddress(addr) {
+  addr = addr.toLowerCase().replace('0x','');
+  // Use keccak from a tiny inline implementation is overkill; wallets accept lowercase in message.from for hub
+  return '0x' + addr;
+}
+
+// ── Submit vote via Snapshot (native, matches SDK) ──
 async function submitVote() {
   const checked = Array.from(document.querySelectorAll('.token-checkbox:checked')).map(c => parseInt(c.value));
   if (!voteWalletAddress || !voteSelectedChoice || checked.length === 0) return;
   const msg = document.getElementById('vote-msg');
-  msg.textContent = 'LOADING...';
+  msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
 
   try {
-    // Load ethers 5.7.2 (compatible with snapshot.js)
-    if (!window.ethers) {
-      const ethersUrls = [
-        'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js',
-        'https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js',
-        'https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js'
-      ];
-      let loaded = false;
-      for (const url of ethersUrls) {
-        try {
-          await new Promise((resolve, reject) => {
-            const s = document.createElement('script');
-            s.src = url;
-            s.onload = resolve;
-            s.onerror = () => reject(new Error('load failed'));
-            document.head.appendChild(s);
-          });
-          if (window.ethers) { loaded = true; break; }
-        } catch(err) { continue; }
-      }
-      if (!loaded) throw new Error('FAILED TO LOAD ETHERS');
-    }
-    // Load snapshot.js
-    if (!window.snapshot) {
-      const snapUrls = [
-        'https://cdn.jsdelivr.net/npm/@snapshot-labs/snapshot.js',
-        'https://unpkg.com/@snapshot-labs/snapshot.js'
-      ];
-      let loaded = false;
-      for (const url of snapUrls) {
-        try {
-          await new Promise((resolve, reject) => {
-            const s = document.createElement('script');
-            s.src = url;
-            s.onload = resolve;
-            s.onerror = () => reject(new Error('load failed'));
-            document.head.appendChild(s);
-          });
-          if (window.snapshot) { loaded = true; break; }
-        } catch(err) { continue; }
-      }
-      if (!loaded) throw new Error('FAILED TO LOAD SNAPSHOT.JS');
-    }
+    // Domain — exactly as snapshot.js: name + version only
+    const domain = { name: 'snapshot', version: '0.1.4' };
 
-    const provider = new window.ethers.providers.Web3Provider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
-    const hub    = 'https://hub.snapshot.org';
-    const client = new window.snapshot.Client712(hub);
+    // voteTypes from snapshot.js for basic/single-choice (choice = uint32)
+    const types = {
+      Vote: [
+        { name: 'from',      type: 'address' },
+        { name: 'space',     type: 'string'  },
+        { name: 'timestamp', type: 'uint64'  },
+        { name: 'proposal',  type: 'bytes32' },
+        { name: 'choice',    type: 'uint32'  },
+        { name: 'reason',    type: 'string'  },
+        { name: 'app',       type: 'string'  },
+        { name: 'metadata',  type: 'string'  }
+      ]
+    };
 
-    msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
+    // Message — note: NO 'type', NO 'privacy' (SDK deletes them)
+    const message = {
+      from:      voteWalletAddress,
+      space:     SNAPSHOT_SPACE,
+      timestamp: parseInt((Date.now() / 1e3).toFixed()),
+      proposal:  SNAPSHOT_PROPOSAL,
+      choice:    voteSelectedChoice,
+      reason:    '',
+      app:       'cope-tool',
+      metadata:  '{}'
+    };
 
-    const receipt = await client.vote(provider, voteWalletAddress, {
-      space:    SNAPSHOT_SPACE,
-      proposal: SNAPSHOT_PROPOSAL,
-      type:     'basic',
-      choice:   voteSelectedChoice,
-      reason:   '',
-      app:      'cope-tool'
+    // Typed data for the wallet — MUST include EIP712Domain for eth_signTypedData_v4
+    const typedData = {
+      domain,
+      types: {
+        EIP712Domain: [
+          { name: 'name',    type: 'string' },
+          { name: 'version', type: 'string' }
+        ],
+        Vote: types.Vote
+      },
+      primaryType: 'Vote',
+      message
+    };
+
+    const sig = await window.ethereum.request({
+      method: 'eth_signTypedData_v4',
+      params: [voteWalletAddress, JSON.stringify(typedData)]
     });
 
-    if (receipt && (receipt.id || receipt.ipfs)) {
+    msg.textContent = 'SUBMITTING TO SNAPSHOT...';
+
+    // Envelope — data.types contains ONLY Vote (no EIP712Domain), matching SDK
+    const envelope = {
+      address: voteWalletAddress,
+      sig,
+      data: { domain, types, message }
+    };
+
+    const submitRes = await fetch('https://seq.snapshot.org/', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(envelope)
+    });
+
+    const result = await submitRes.json();
+
+    if (submitRes.ok && (result.id || result.ipfs)) {
       msg.textContent = `✓ VOTE SUBMITTED — ${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} VOTED.`;
       document.querySelectorAll('.vote-choice-btn').forEach(b => b.disabled = true);
       document.querySelectorAll('.token-checkbox').forEach(b => b.disabled = true);
       setTimeout(fetchVoteResults, 3000);
     } else {
-      throw new Error('No receipt returned');
+      const err = (result.error_description || result.error || JSON.stringify(result));
+      msg.textContent = '⚠ ' + String(err).toUpperCase().slice(0, 120);
+      document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
+      voteSelectedChoice = null;
+      console.error('Snapshot rejected:', result);
     }
   } catch(e) {
-    const errText = e?.error?.message || e?.error_description || e?.message || JSON.stringify(e) || 'VOTE FAILED';
+    const errText = e?.error?.message || e?.message || JSON.stringify(e);
     msg.textContent = '⚠ ' + String(errText).toUpperCase().slice(0, 120);
     document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
     voteSelectedChoice = null;
@@ -1041,7 +1063,7 @@ function calc() {
   let html = `
     <div class="group-card">
       <div class="group-header">
-        <span class="group-name">Participant keepers</span>
+        <span class="group-name">C.O.P.E. participant (return NFT+ETH)</span>
         <span class="group-count">${partKeeperSlots} citizens</span>
       </div>
       <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(keeperETHActual,4)}</span></div>
@@ -1053,11 +1075,11 @@ function calc() {
     </div>
     <div class="group-card">
       <div class="group-header">
-        <span class="group-name">Participant sacrificers</span>
+        <span class="group-name">C.O.P.E. participant (return ETH only)</span>
         <span class="group-count">${partSacrifice} citizens</span>
       </div>
       <div class="group-line"><span class="gl">Treasury split</span><span class="gv">${fE(sacrificerTotal,4)}</span></div>
-      <div class="group-line"><span class="gl">Citizen</span><span class="gv">sacrificed</span></div>
+      <div class="group-line"><span class="gl">Citizen</span><span class="gv">left to die (evader returned)</span></div>
       <div class="group-total">
         <span class="tl">Total each</span>
         <span class="tv">${fE(sacrificerTotal,4)}</span>
