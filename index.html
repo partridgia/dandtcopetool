@@ -91,6 +91,23 @@
   .m-text { font-size: var(--fs-sm); line-height: 2.4; color: var(--yellow-text); font-family: var(--mono); letter-spacing: 1px; }
   .m-divider { border: none; border-top: 1px solid #222; margin: 28px 0; }
 
+  /* ── PHASE ANIMATION ── */
+  .anim-btn {
+    font-family: var(--mono); font-size: 6px; letter-spacing: 1px;
+    background: transparent; color: var(--yellow-text);
+    border: 1px solid #333; padding: 8px 12px; cursor: pointer;
+    text-transform: uppercase; transition: border 0.2s, color 0.2s;
+  }
+  .anim-btn.active { border: 1px solid var(--yellow-text); color: var(--yellow-text); }
+  .anim-btn:disabled { opacity: 0.4; cursor: default; }
+  .anim-heading { font-family: var(--mono); font-size: 7px; letter-spacing: 1px; color: var(--yellow-text); margin-bottom: 10px; text-transform: uppercase; }
+  .anim-grid { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 5px; overflow: hidden; }
+  .anim-box { flex: 1; border: 1px solid #333; padding: 10px; transition: opacity 0.4s ease; }
+  .anim-box-title { font-family: var(--mono); font-size: 6px; letter-spacing: 1px; color: var(--yellow-text); text-transform: uppercase; line-height: 1.8; }
+  .anim-box-sub { font-family: var(--mono); font-size: 5px; letter-spacing: 1px; color: #666; margin-bottom: 10px; text-transform: uppercase; }
+  .anim-treasury { border: 1px solid; padding: 10px; margin-bottom: 16px; transition: opacity 0.4s ease; }
+  .anim-treasury-title { font-family: var(--mono); font-size: 6px; letter-spacing: 1px; margin-bottom: 8px; text-align: center; text-transform: uppercase; }
+
   /* ── TIMING TABLE ── */
   .timing-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
   .timing-table th { font-size: 6px; color: #444; letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 8px 12px; border-bottom: 1px solid #333; background: #0a0a0a; }
@@ -141,7 +158,8 @@
       <nav class="tab-nav">
         <button class="tab-btn active" onclick="showTab('vote')">VOTE</button>
         <button class="tab-btn" onclick="showTab('cope')">PARAMETERS</button>
-        <button class="tab-btn" onclick="showTab('manifesto')">MANIFESTO</button>
+        <button class="tab-btn" onclick="showTab('manifesto')">MECHANICS</button>
+        <button class="tab-btn" onclick="showTab('faq')">FAQ</button>
       </nav>
     </div>
   </header>
@@ -197,25 +215,73 @@
 <div id="panel-manifesto" class="content-panel">
   <div style="padding: 8px 0 0;">
 
-    <div style="padding-bottom: 40px; border-bottom: 1px solid var(--yellow-text); margin-bottom: 40px;">
-      <div class="m-text" style="letter-spacing: 3px; line-height: 3;">THE GAME ENDS<br>WHEN ENOUGH OF YOU<br>DECIDE IT DOES.</div>
-    </div>
+    <div id="cope-anim-stage" style="position:relative; background:#000; padding:4px 0; overflow:visible; margin-bottom:8px;">
+      <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;">
+        <button id="p1Btn" class="anim-btn">PHASE 1</button>
+        <button id="p2Btn" class="anim-btn">PHASE 2</button>
+        <button id="p3Btn" class="anim-btn">PHASE 3</button>
+        <button id="p4Btn" class="anim-btn">PHASE 4</button>
+        <button id="resetBtn" class="anim-btn">RESET</button>
+      </div>
 
-    <div class="m-text" style="margin-bottom: 40px;">Every day you hold a citizen NFT you pay taxes.</div>
-    <div class="m-text" style="margin-bottom: 40px;">No end date.</div>
-    <div class="m-text" style="margin-bottom: 40px;">No guarantee you make it to the final 69.</div>
-    <div class="m-text" style="margin-bottom: 40px;">C.O.P.E. lets citizens agree to end the game together.</div>
+      <div class="anim-heading">CITIZENS CONTRACT (<span id="poolCount">108</span>)</div>
+      <div id="pool" class="anim-grid" style="height:132px; margin-bottom:20px;"></div>
+
+      <div style="display:flex; gap:12px; margin-bottom:16px;">
+        <div id="citizenBox" class="anim-box">
+          <div class="anim-box-title">CITIZEN + ETH (<span id="citCount">0</span>/<span id="citTarget">0</span>)</div>
+          <div class="anim-box-sub">C.O.P.E. CONTRACT A</div>
+          <div id="citizen" class="anim-grid" style="height:132px;"></div>
+        </div>
+        <div id="evaderBox" class="anim-box">
+          <div class="anim-box-title">EVADER + MORE ETH (<span id="evaCount">0</span>/0)</div>
+          <div class="anim-box-sub">C.O.P.E. CONTRACT B</div>
+          <div id="evader" class="anim-grid" style="height:132px;"></div>
+        </div>
+      </div>
+
+      <div id="gameTreasuryBox" class="anim-treasury" style="border-color:#ff4444;">
+        <div class="anim-treasury-title" style="color:#ff4444;">GAME TREASURY</div>
+        <div id="gtDots" style="display:flex; flex-wrap:wrap; align-content:flex-start; gap:4px; justify-content:center; height:40px; overflow:hidden;"></div>
+      </div>
+
+      <div id="copeTreasuryBox" class="anim-treasury" style="border-color:var(--yellow-text);">
+        <div class="anim-treasury-title" style="color:var(--yellow-text);">C.O.P.E. TREASURY</div>
+        <div id="copeInner" style="position:relative; height:34px;">
+          <div id="copeBarTrack" style="position:absolute; top:0; left:0; right:0; background:#111; height:14px; overflow:hidden; transition:opacity 0.3s ease;">
+            <div id="copeBarFill" style="background:var(--yellow-text); height:100%; width:0%; transition:width 0.2s ease;"></div>
+          </div>
+          <div id="copeDots" style="position:absolute; top:0; left:0; right:0; display:flex; flex-wrap:wrap; align-content:flex-start; gap:4px; justify-content:center; opacity:0; transition:opacity 0.3s ease;"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="anim-heading">EVADERS CONTRACT (<span id="evaFinalCount">0</span>)</div>
+        <div id="evaderFinalGrid" class="anim-grid" style="height:50px;"></div>
+      </div>
+    </div>
 
     <hr class="m-divider">
+    <div class="m-subheading">HOW IT WORKS</div>
 
     <div class="m-block">
-      <div class="m-label">What is this?</div>
-      <div class="m-text">Death and Taxes is a game of survival. Citizens die. The last 69 standing share the treasury. But what if you could negotiate your fate instead of waiting for the taxman?</div>
+      <div class="m-label">Phase 1</div>
+      <div class="m-text">Citizens choose to enter one of the C.O.P.E. contracts which have a minimum consensus level of 69 combined (or current population minus 39). Contract A (C.O.P.E. Citizens) is for those who wish to retain one of the final 69 NFTs but take a smaller treasury share. Contract B (C.O.P.E. Evaders) is for those willing to take a larger treasury share but let their Citizen die and have an Evader returned. For the purpose of C.O.P.E. NFTs are assumed to have a value of 3 ETH (TBC) so Contract B participants would receive 3 ETH (TBC) more than Contract A participants. The IRS runs an automatic bailout schedule for all citizens in either contract from the moment they join — this encourages participation and minimises contract complexity.</div>
     </div>
 
     <div class="m-block">
-      <div class="m-label">The offer</div>
-      <div class="m-text">The C.O.P.E. agreement would enable a group of citizens to resolve the game together — before the natural end. You deposit your citizen NFT and collectively decide those that make it to the final 69 and those that die. In return, everyone in the agreement gets an equal share based on the treasury split and NFT value (NFT+ETH or ETH only).</div>
+      <div class="m-label">Phase 2</div>
+      <div class="m-text">After consensus is reached, Contract A remains open for an undisclosed length of time for additional joiners to the collective, increasing the treasury share for everyone in the collective. Remaining citizens outside the C.O.P.E. contracts would be paying daily taxes at a loss and therefore nudged to join. Contract B is closed to new entrants.</div>
+    </div>
+
+    <div class="m-block">
+      <div class="m-label">Phase 3</div>
+      <div class="m-text">Once C.O.P.E. the contract is closed (on an Epoch change), the Contract B Citizens are delinquent and killed by the IRS. Contract A claims proportions of the game treasury for all citizens within it, this is then split in accordance with the agreed structure with those participants in Contract B.</div>
+    </div>
+
+    <div class="m-block">
+      <div class="m-label">Phase 4</div>
+      <div class="m-text">With all treasury claimed and allocated, NFTs and treasury shares are redeemed by or returned to their owners. On exit there will be an option to collect an exclusive participants edition by m0dest for 0.969 via an allowlisted mint page (allocation of 1 per NFT entered).</div>
     </div>
 
   </div>
@@ -1120,6 +1186,174 @@ document.getElementById('nonpart-slider').addEventListener('input', function() {
 });
 
 fetchChain();
+</script>
+
+<script>
+// ── PHASE ANIMATION (COPE-styled) ──────────────
+(function(){
+  const stage = document.getElementById('cope-anim-stage');
+  if (!stage) return;
+  const pool = document.getElementById('pool');
+  const citizen = document.getElementById('citizen');
+  const evader = document.getElementById('evader');
+  const citizenBox = document.getElementById('citizenBox');
+  const evaderBox = document.getElementById('evaderBox');
+  const gameTreasuryBox = document.getElementById('gameTreasuryBox');
+  const copeTreasuryBox = document.getElementById('copeTreasuryBox');
+  const poolCount = document.getElementById('poolCount');
+  const citCount = document.getElementById('citCount');
+  const citTarget = document.getElementById('citTarget');
+  const evaCount = document.getElementById('evaCount');
+  const p1Btn = document.getElementById('p1Btn');
+  const p2Btn = document.getElementById('p2Btn');
+  const p3Btn = document.getElementById('p3Btn');
+  const p4Btn = document.getElementById('p4Btn');
+  const resetBtn = document.getElementById('resetBtn');
+  const gtDots = document.getElementById('gtDots');
+  const copeBarTrack = document.getElementById('copeBarTrack');
+  const copeBarFill = document.getElementById('copeBarFill');
+  const copeDots = document.getElementById('copeDots');
+  const evaderFinalGrid = document.getElementById('evaderFinalGrid');
+  const evaFinalCount = document.getElementById('evaFinalCount');
+
+  const SIZE = 18;
+  const P1_CIT = 30, P1_EVA = 39, P2_CIT = 15;
+  const S1_POOL = 108 - (P1_CIT+P1_EVA);
+  const S2_POOL = S1_POOL - P2_CIT;
+  const YELLOW = '#CCFF00';
+  const RED = '#ff4444';
+  let busy = false;
+  const phaseBtns = [p1Btn, p2Btn, p3Btn, p4Btn];
+
+  function setButtons(disabled){ [p1Btn,p2Btn,p3Btn,p4Btn,resetBtn].forEach(b=>{ b.disabled = disabled; }); }
+  function highlightPhase(n){ phaseBtns.forEach((b,idx)=>{ b.classList.toggle('active', idx+1===n); }); }
+
+  function makeSquareStyle(sq){
+    sq.style.width = SIZE+'px'; sq.style.height = SIZE+'px';
+    sq.style.background = YELLOW; sq.style.margin='0'; sq.style.flexShrink='0';
+    sq.style.boxSizing='border-box'; sq.style.position='relative'; sq.style.border='none';
+  }
+  function makeDeadStyle(sq){ makeSquareStyle(sq); sq.style.background='transparent'; sq.style.border='2px solid '+YELLOW; }
+  function addPlain(container, count){ for(let i=0;i<count;i++){ const sq=document.createElement('div'); makeSquareStyle(sq); container.appendChild(sq); } }
+  function addStaticDot(square, color, hollow){
+    const dot=document.createElement('div'); dot.className='reveal-dot';
+    dot.style.position='absolute'; dot.style.width='7px'; dot.style.height='7px'; dot.style.borderRadius='50%';
+    dot.style.left='50%'; dot.style.top='50%'; dot.style.transform='translate(-50%,-50%)';
+    dot.style.boxSizing='border-box'; dot.style.transition='opacity 0.3s ease';
+    if(hollow){ dot.style.background='transparent'; dot.style.border='2px solid '+color; } else { dot.style.background=color; }
+    square.appendChild(dot);
+  }
+  function clearAllDom(){
+    pool.innerHTML=''; citizen.innerHTML=''; evader.innerHTML=''; gtDots.innerHTML='';
+    copeDots.innerHTML=''; copeDots.style.opacity='0'; copeBarTrack.style.opacity='1'; copeBarFill.style.width='0%';
+    evaderFinalGrid.innerHTML=''; stage.querySelectorAll('.flow-dot').forEach(d=>d.remove());
+    citizenBox.style.opacity='1'; evaderBox.style.opacity='1'; gameTreasuryBox.style.opacity='1'; copeTreasuryBox.style.opacity='1';
+  }
+  function buildState(n){
+    clearAllDom();
+    if(n===0){ addPlain(pool,108); poolCount.textContent=108; citCount.textContent=0; citTarget.textContent=0; evaCount.textContent=0; evaFinalCount.textContent=0; }
+    else if(n===1){ addPlain(pool,S1_POOL); addPlain(citizen,P1_CIT); addPlain(evader,P1_EVA); poolCount.textContent=S1_POOL; citCount.textContent=P1_CIT; citTarget.textContent=P1_CIT; evaCount.textContent=P1_EVA; evaFinalCount.textContent=0; }
+    else if(n===2){ addPlain(pool,S2_POOL); addPlain(citizen,P1_CIT+P2_CIT); addPlain(evader,P1_EVA); poolCount.textContent=S2_POOL; citCount.textContent=P1_CIT+P2_CIT; citTarget.textContent=P1_CIT+P2_CIT; evaCount.textContent=P1_EVA; evaFinalCount.textContent=0; }
+    else if(n===3){
+      addPlain(pool,S2_POOL); Array.from(pool.children).forEach(sq=>addStaticDot(sq,RED,false));
+      addPlain(citizen,P1_CIT+P2_CIT); Array.from(citizen.children).forEach(sq=>addStaticDot(sq,RED,true));
+      for(let i=0;i<P1_EVA;i++){ const sq=document.createElement('div'); makeDeadStyle(sq); addStaticDot(sq,YELLOW,false); evader.appendChild(sq); }
+      poolCount.textContent=S2_POOL; citCount.textContent=P1_CIT+P2_CIT; citTarget.textContent=P1_CIT+P2_CIT; evaCount.textContent=P1_EVA; evaFinalCount.textContent=0;
+      gameTreasuryBox.style.opacity='0.35'; copeTreasuryBox.style.opacity='0.35';
+    }
+    else if(n===4){
+      addPlain(pool,S2_POOL+(P1_CIT+P2_CIT));
+      for(let i=0;i<P1_EVA;i++){ const sq=document.createElement('div'); makeDeadStyle(sq); evaderFinalGrid.appendChild(sq); }
+      citizenBox.style.opacity='0.35'; evaderBox.style.opacity='0.35'; gameTreasuryBox.style.opacity='0.35'; copeTreasuryBox.style.opacity='0.35';
+      poolCount.textContent=S2_POOL+(P1_CIT+P2_CIT); citCount.textContent=0; citTarget.textContent=0; evaCount.textContent=0; evaFinalCount.textContent=P1_EVA;
+    }
+  }
+  function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+  function addPlaceholders(container, count){ for(let i=0;i<count;i++){ const ph=document.createElement('div'); makeSquareStyle(ph); ph.style.opacity='0'; ph.dataset.used='false'; container.appendChild(ph); } }
+
+  const MOVE_DUR = 320;
+  function moveSquare(origSq, targetContainer, color, duration){
+    const stageRect=stage.getBoundingClientRect(); const rect1=origSq.getBoundingClientRect();
+    const placeholder=targetContainer.querySelector('[data-used="false"]'); placeholder.dataset.used='true';
+    const rect2=placeholder.getBoundingClientRect(); origSq.style.visibility='hidden';
+    const ghost=document.createElement('div'); ghost.style.background=color; ghost.style.position='absolute';
+    ghost.style.width=rect1.width+'px'; ghost.style.height=rect1.height+'px';
+    ghost.style.left=(rect1.left-stageRect.left)+'px'; ghost.style.top=(rect1.top-stageRect.top)+'px'; ghost.style.transition='none';
+    stage.appendChild(ghost);
+    const dx=(rect2.left-stageRect.left)-(rect1.left-stageRect.left); const dy=(rect2.top-stageRect.top)-(rect1.top-stageRect.top);
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ ghost.style.transition=`transform ${duration}ms ease`; ghost.style.transform=`translate(${dx}px, ${dy}px)`; }); });
+    setTimeout(()=>{ ghost.remove(); placeholder.style.opacity='1'; }, duration);
+  }
+  function compact(container){ Array.from(container.children).forEach(el=>{ if(el.style.visibility==='hidden') el.remove(); }); }
+
+  async function animatePhase1(){
+    addPlaceholders(citizen,P1_CIT); addPlaceholders(evader,P1_EVA);
+    const squares=Array.from(pool.children); shuffle(squares);
+    const moving=squares.slice(0,69); const evaderGroup=moving.slice(0,P1_EVA); const citizenGroup=moving.slice(P1_EVA,69);
+    const queue=shuffle([...evaderGroup.map(sq=>({sq,target:evader,label:'e'})),...citizenGroup.map(sq=>({sq,target:citizen,label:'c'}))]);
+    let remaining=108,cit=0,eva=0;
+    for(const item of queue){ moveSquare(item.sq,item.target,YELLOW,MOVE_DUR); remaining--; if(item.label==='c')cit++;else eva++; poolCount.textContent=remaining; citCount.textContent=cit; citTarget.textContent=cit; evaCount.textContent=eva; await new Promise(r=>setTimeout(r,90)); }
+    await new Promise(r=>setTimeout(r,MOVE_DUR)); compact(pool);
+  }
+  async function animatePhase2(){
+    addPlaceholders(citizen,P2_CIT); const available=Array.from(pool.children); shuffle(available); const picks=available.slice(0,P2_CIT);
+    let remaining=S1_POOL,cit=P1_CIT;
+    for(const sq of picks){ await new Promise(r=>setTimeout(r,350+Math.random()*1400)); moveSquare(sq,citizen,YELLOW,MOVE_DUR); remaining--; cit++; poolCount.textContent=remaining; citCount.textContent=cit; citTarget.textContent=cit; }
+    await new Promise(r=>setTimeout(r,MOVE_DUR)); compact(pool);
+  }
+  function centerOf(el, stageRect){ const r=el.getBoundingClientRect(); return { x:r.left+r.width/2-stageRect.left, y:r.top+r.height/2-stageRect.top }; }
+  function makeDot(color,size){ const d=document.createElement('div'); d.className='flow-dot'; d.style.position='absolute'; d.style.width=size+'px'; d.style.height=size+'px'; d.style.borderRadius='50%'; d.style.background=color; d.style.transition='none'; d.style.zIndex='5'; return d; }
+  function placeDotXY(d,x,y,size){ d.style.left=(x-size/2)+'px'; d.style.top=(y-size/2)+'px'; }
+  function flyDot(d,from,to,size,duration){ placeDotXY(d,from.x,from.y,size); requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ d.style.transition=`left ${duration}ms ease, top ${duration}ms ease`; placeDotXY(d,to.x,to.y,size); }); }); }
+  function addRevealDot(square,color){ const dot=document.createElement('div'); dot.className='reveal-dot'; dot.style.position='absolute'; dot.style.width='7px'; dot.style.height='7px'; dot.style.borderRadius='50%'; dot.style.background=color; dot.style.left='50%'; dot.style.top='50%'; dot.style.transform='translate(-50%,-50%)'; dot.style.opacity='0'; dot.style.boxSizing='border-box'; dot.style.transition='opacity 0.2s ease, background 0.3s ease, border 0.3s ease'; square.appendChild(dot); return dot; }
+
+  async function animatePhase3(){
+    gameTreasuryBox.style.opacity='1'; copeTreasuryBox.style.opacity='1';
+    Array.from(evader.children).forEach(sq=>{ sq.style.transition='background 0.5s ease, border 0.5s ease'; sq.style.background='transparent'; sq.style.border='2px solid '+YELLOW; });
+    await new Promise(r=>setTimeout(r,550));
+    const mainSquares=Array.from(pool.children); const citizenSquares=Array.from(citizen.children); const evaderSquares=Array.from(evader.children);
+    const redTargets=shuffle([...mainSquares,...citizenSquares]); const redReveals=redTargets.map(sq=>addRevealDot(sq,RED));
+    const redDotMap=new Map(); redTargets.forEach((sq,i)=>redDotMap.set(sq,redReveals[i]));
+    const staticRed=[];
+    for(let i=0;i<69;i++){ const d=document.createElement('div'); d.style.width='8px'; d.style.height='8px'; d.style.borderRadius='50%'; d.style.background=RED; gtDots.appendChild(d); staticRed.push(d); }
+    await new Promise(r=>setTimeout(r,750));
+    const stageRect=stage.getBoundingClientRect();
+    for(let i=0;i<69;i++){ const src=staticRed[i]; const sr=src.getBoundingClientRect(); const from={x:sr.left+sr.width/2-stageRect.left,y:sr.top+sr.height/2-stageRect.top}; src.remove(); const dest=centerOf(redTargets[i],stageRect); const clone=makeDot(RED,8); stage.appendChild(clone); flyDot(clone,from,dest,8,180); setTimeout(()=>{ clone.remove(); redReveals[i].style.opacity='1'; },190); await new Promise(r=>setTimeout(r,100)); }
+    await new Promise(r=>setTimeout(r,250)); gameTreasuryBox.style.opacity='0.35';
+    const yellowReveals=evaderSquares.map(sq=>addRevealDot(sq,YELLOW)); await new Promise(r=>setTimeout(r,400));
+    for(let i=0;i<45;i++){ const sq=citizenSquares[i]; const from=centerOf(sq,stageRect); const barR=copeBarTrack.getBoundingClientRect(); const to={x:barR.left+barR.width/2-stageRect.left,y:barR.top+barR.height/2-stageRect.top}; const clone=makeDot(YELLOW,8); stage.appendChild(clone); flyDot(clone,from,to,8,180); setTimeout(()=>{ clone.remove(); },190); const leftBehind=redDotMap.get(sq); if(leftBehind){ leftBehind.style.background='transparent'; leftBehind.style.border='2px solid '+RED; } await new Promise(r=>setTimeout(r,100)); copeBarFill.style.width=Math.round(((i+1)/45)*100)+'%'; }
+    await new Promise(r=>setTimeout(r,400));
+    copeBarTrack.style.opacity='0'; copeDots.style.opacity='1'; const staticYellow=[];
+    for(let i=0;i<39;i++){ const d=document.createElement('div'); d.style.width='8px'; d.style.height='8px'; d.style.borderRadius='50%'; d.style.background=YELLOW; copeDots.appendChild(d); staticYellow.push(d); }
+    await new Promise(r=>setTimeout(r,700));
+    for(let i=0;i<39;i++){ const src=staticYellow[i]; const sr=src.getBoundingClientRect(); const from={x:sr.left+sr.width/2-stageRect.left,y:sr.top+sr.height/2-stageRect.top}; src.remove(); const dest=centerOf(evaderSquares[i],stageRect); const clone=makeDot(YELLOW,8); stage.appendChild(clone); flyDot(clone,from,dest,8,180); setTimeout(()=>{ clone.remove(); yellowReveals[i].style.opacity='1'; },190); await new Promise(r=>setTimeout(r,100)); }
+    copeTreasuryBox.style.opacity='0.35';
+  }
+  function flyElementTo(el, destContainer, duration){
+    const stageRect=stage.getBoundingClientRect(); const rect1=el.getBoundingClientRect(); destContainer.appendChild(el); const rect2=el.getBoundingClientRect();
+    const dx=rect1.left-rect2.left; const dy=rect1.top-rect2.top; el.style.transition='none'; el.style.transform=`translate(${dx}px, ${dy}px)`;
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ el.style.transition=`transform ${duration}ms ease`; el.style.transform='translate(0,0)'; }); });
+  }
+  async function animatePhase4(){
+    const PHASE4_DUR=550, STAGGER=70;
+    const existingPoolDots=pool.querySelectorAll('.reveal-dot'); existingPoolDots.forEach(d=>{ d.style.opacity='0'; }); await new Promise(r=>setTimeout(r,320)); existingPoolDots.forEach(d=>d.remove());
+    const citizenSquares=Array.from(citizen.children); const evaderSquares=Array.from(evader.children);
+    citizenSquares.forEach((sq,i)=>{ setTimeout(()=>{ sq.innerHTML=''; sq.style.background=YELLOW; sq.style.border='none'; flyElementTo(sq,pool,PHASE4_DUR); }, i*STAGGER); });
+    evaderSquares.forEach((sq,i)=>{ setTimeout(()=>{ sq.innerHTML=''; flyElementTo(sq,evaderFinalGrid,PHASE4_DUR); }, i*STAGGER); });
+    const maxDelay=Math.max(citizenSquares.length,evaderSquares.length)*STAGGER+PHASE4_DUR+150; await new Promise(r=>setTimeout(r,maxDelay));
+    poolCount.textContent=parseInt(poolCount.textContent,10)+citizenSquares.length; citCount.textContent=0; citTarget.textContent=0; evaCount.textContent=0; evaFinalCount.textContent=evaderSquares.length;
+    citizenBox.style.opacity='0.35'; evaderBox.style.opacity='0.35'; gameTreasuryBox.style.opacity='0.35'; copeTreasuryBox.style.opacity='0.35';
+  }
+  async function goToPhase(target, animateFn){ if(busy)return; busy=true; highlightPhase(target); setButtons(true); buildState(target-1); await animateFn(); setButtons(false); busy=false; }
+
+  p1Btn.addEventListener('click',()=>goToPhase(1,animatePhase1));
+  p2Btn.addEventListener('click',()=>goToPhase(2,animatePhase2));
+  p3Btn.addEventListener('click',()=>goToPhase(3,animatePhase3));
+  p4Btn.addEventListener('click',()=>goToPhase(4,animatePhase4));
+  resetBtn.addEventListener('click',()=>{ if(busy)return; buildState(0); highlightPhase(0); });
+
+  buildState(0); highlightPhase(0);
+})();
 </script>
 </body>
 </html>
