@@ -845,24 +845,48 @@ async function submitVote() {
   msg.textContent = 'LOADING...';
 
   try {
-    // Load ethers 5.2 (the version snapshot.js is built against)
+    // Load ethers 5.7.2 (compatible with snapshot.js)
     if (!window.ethers) {
-      await new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = 'https://cdn.ethers.io/lib/ethers-5.2.umd.min.js';
-        s.type = 'application/javascript';
-        s.onload = resolve; s.onerror = () => reject(new Error('Failed to load ethers'));
-        document.head.appendChild(s);
-      });
+      const ethersUrls = [
+        'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js',
+        'https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js',
+        'https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js'
+      ];
+      let loaded = false;
+      for (const url of ethersUrls) {
+        try {
+          await new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = url;
+            s.onload = resolve;
+            s.onerror = () => reject(new Error('load failed'));
+            document.head.appendChild(s);
+          });
+          if (window.ethers) { loaded = true; break; }
+        } catch(err) { continue; }
+      }
+      if (!loaded) throw new Error('FAILED TO LOAD ETHERS');
     }
     // Load snapshot.js
     if (!window.snapshot) {
-      await new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/@snapshot-labs/snapshot.js';
-        s.onload = resolve; s.onerror = () => reject(new Error('Failed to load snapshot.js'));
-        document.head.appendChild(s);
-      });
+      const snapUrls = [
+        'https://cdn.jsdelivr.net/npm/@snapshot-labs/snapshot.js',
+        'https://unpkg.com/@snapshot-labs/snapshot.js'
+      ];
+      let loaded = false;
+      for (const url of snapUrls) {
+        try {
+          await new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = url;
+            s.onload = resolve;
+            s.onerror = () => reject(new Error('load failed'));
+            document.head.appendChild(s);
+          });
+          if (window.snapshot) { loaded = true; break; }
+        } catch(err) { continue; }
+      }
+      if (!loaded) throw new Error('FAILED TO LOAD SNAPSHOT.JS');
     }
 
     const provider = new window.ethers.providers.Web3Provider(window.ethereum);
