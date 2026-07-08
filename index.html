@@ -657,34 +657,50 @@ let voteCitizenTokens  = [];
 // ── Fetch and display live results ────────────
 async function fetchVoteResults() {
   try {
-    const query = `{
+    const query = `query {
       proposal(id:"${SNAPSHOT_PROPOSAL}") {
         scores
         scores_total
         choices
+        state
       }
     }`;
     const res  = await fetch(SNAPSHOT_API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ query })
     });
+    if (!res.ok) { console.error('Snapshot API returned', res.status); return; }
     const data = await res.json();
-    const p    = data.data.proposal;
-    if (!p) return;
+    const p    = data?.data?.proposal;
+    if (!p) { console.error('No proposal data', data); return; }
 
-    const scores = p.scores;
-    const total  = p.scores_total || 0;
+    const scores  = p.scores || [];
+    const choices = p.choices || [];
+    const total   = p.scores_total || 0;
+
+    // Map by choice label so order in the poll doesn't matter
+    const findScore = (labels) => {
+      for (let i = 0; i < choices.length; i++) {
+        const c = choices[i].toLowerCase();
+        if (labels.some(l => c.includes(l))) return scores[i] || 0;
+      }
+      return 0;
+    };
+
+    const yesScore = findScore(['yes']);
+    const noScore  = findScore(['no']);
+    const depScore = findScore(['depend', 'maybe']);
 
     document.getElementById('total-voted').textContent = Math.round(total);
-    document.getElementById('yes-count').textContent   = Math.round(scores[0] || 0);
-    document.getElementById('no-count').textContent    = Math.round(scores[1] || 0);
-    document.getElementById('dep-count').textContent   = Math.round(scores[2] || 0);
+    document.getElementById('yes-count').textContent   = Math.round(yesScore);
+    document.getElementById('no-count').textContent    = Math.round(noScore);
+    document.getElementById('dep-count').textContent   = Math.round(depScore);
 
     const pct = (n) => total > 0 ? ((n / total) * 100).toFixed(1) + '%' : '0%';
-    document.getElementById('yes-bar').style.width = pct(scores[0] || 0);
-    document.getElementById('no-bar').style.width  = pct(scores[1] || 0);
-    document.getElementById('dep-bar').style.width = pct(scores[2] || 0);
+    document.getElementById('yes-bar').style.width = pct(yesScore);
+    document.getElementById('no-bar').style.width  = pct(noScore);
+    document.getElementById('dep-bar').style.width = pct(depScore);
   } catch(e) {
     console.error('Failed to fetch vote results', e);
   }
@@ -829,8 +845,6 @@ async function submitVote() {
   msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
 
   try {
-    const timestamp = Math.floor(Date.now() / 1000);
-
     const domain = { name: 'snapshot', version: '0.1.4' };
 
     const types = {
@@ -849,15 +863,16 @@ async function submitVote() {
     const message = {
       from:      voteWalletAddress,
       space:     SNAPSHOT_SPACE,
-      timestamp: timestamp,
+      timestamp: Math.floor(Date.now() / 1000),
       proposal:  SNAPSHOT_PROPOSAL,
       choice:    voteSelectedChoice,
       reason:    '',
       app:       'cope-tool',
-      metadata:  JSON.stringify({ tokenIds: checked })
+      metadata:  '{}'
     };
 
     const typedData = {
+      domain,
       types: {
         EIP712Domain: [
           { name: 'name',    type: 'string' },
@@ -866,26 +881,28 @@ async function submitVote() {
         Vote: types.Vote
       },
       primaryType: 'Vote',
-      domain,
       message
     };
 
-    const sig = await window.ethereum.request({
-      method: 'eth_signTypedData_v4',
-      params: [voteWalletAddress, JSON.stringify(typedData)]
-    });
+    let sig;
+    try {
+      sig = await window.ethereum.request({
+        method: 'eth_signTypedData_v4',
+        params: [voteWalletAddress.toLowerCase(), JSON.stringify(typedData)]
+      });
+    } catch (signErr) {
+      // Surface the real signing error
+      const m = signErr?.message || JSON.stringify(signErr);
+      msg.textContent = '⚠ SIGN ERROR: ' + m.toUpperCase().slice(0, 80);
+      document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
+      voteSelectedChoice = null;
+      console.error('Signing failed:', signErr);
+      return;
+    }
 
     msg.textContent = 'SUBMITTING TO SNAPSHOT...';
 
-    const envelope = {
-      address: voteWalletAddress,
-      sig:     sig,
-      data: {
-        domain,
-        types,
-        message
-      }
-    };
+    const envelope = { address: voteWalletAddress, sig, data: { domain, types, message } };
 
     const submitRes = await fetch('https://seq.snapshot.org/', {
       method: 'POST',
@@ -901,18 +918,18 @@ async function submitVote() {
       document.querySelectorAll('.token-checkbox').forEach(b => b.disabled = true);
       setTimeout(fetchVoteResults, 3000);
     } else {
-      const err = (result.error_description || result.error || 'SUBMISSION FAILED. TRY AGAIN.');
-      msg.textContent = '⚠ ' + String(err).toUpperCase();
+      const err = (result.error_description || result.error || JSON.stringify(result) || 'SUBMISSION FAILED');
+      msg.textContent = '⚠ ' + String(err).toUpperCase().slice(0, 100);
       document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
       voteSelectedChoice = null;
-      console.error(result);
+      console.error('Snapshot rejected:', result);
     }
   } catch(e) {
-    const errText = e?.error?.message || e?.message || 'VOTE FAILED. TRY AGAIN.';
-    msg.textContent = '⚠ ' + String(errText).toUpperCase();
+    const errText = e?.error?.message || e?.message || JSON.stringify(e) || 'VOTE FAILED';
+    msg.textContent = '⚠ ' + String(errText).toUpperCase().slice(0, 100);
     document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
     voteSelectedChoice = null;
-    console.error(e);
+    console.error('submitVote error:', e);
   }
 }
 
