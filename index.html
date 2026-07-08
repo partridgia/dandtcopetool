@@ -875,7 +875,7 @@ async function submitVote() {
     const receipt = await client.vote(provider, voteWalletAddress, {
       space:    SNAPSHOT_SPACE,
       proposal: SNAPSHOT_PROPOSAL,
-      type:     'single-choice',
+      type:     'basic',
       choice:   voteSelectedChoice,
       reason:   '',
       app:      'cope-tool'
