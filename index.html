@@ -902,7 +902,21 @@ async function submitVote() {
 
     msg.textContent = 'SUBMITTING TO SNAPSHOT...';
 
-    const envelope = { address: voteWalletAddress, sig, data: { domain, types, message } };
+    const envelope = {
+      address: voteWalletAddress,
+      sig,
+      data: {
+        domain,
+        types: {
+          EIP712Domain: [
+            { name: 'name',    type: 'string' },
+            { name: 'version', type: 'string' }
+          ],
+          Vote: types.Vote
+        },
+        message
+      }
+    };
 
     const submitRes = await fetch('https://seq.snapshot.org/', {
       method: 'POST',
