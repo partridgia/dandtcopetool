@@ -220,10 +220,11 @@
 
 <!-- ── MANIFESTO ── -->
 <div id="panel-manifesto" class="content-panel">
-  <div class="section-title">MECHANICS</div>
+  <div class="section-title">ILLUSTRATION</div>
   <div style="padding: 8px 0 0;">
+    <div class="m-text" style="margin-bottom:24px; color:#888;">Click each phase to see how it works.</div>
 
-    <div id="cope-anim-stage" style="position:relative; background:#000; padding:4px 0; overflow:visible; margin-bottom:8px;">
+    <div id="cope-anim-stage" style="position:relative; background:#000; padding:0; overflow:visible; margin-bottom:8px;">
       <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;">
         <button id="p1Btn" class="anim-btn">PHASE 1</button>
         <button id="p2Btn" class="anim-btn">PHASE 2</button>
@@ -267,6 +268,8 @@
         <div class="anim-heading">EVADERS CONTRACT (<span id="evaFinalCount">0</span>)</div>
         <div id="evaderFinalGrid" class="anim-grid" style="min-height:50px;"></div>
       </div>
+
+      <div id="anim-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1000;"></div>
     </div>
 
     <hr class="m-divider">
@@ -1059,7 +1062,7 @@ setInterval(fetchVoteResults, 30000);
 </script>
 
 <footer>
-  BUILT BY <a href="https://x.com/_smartie118" target="_blank">_SMARTIE</a>
+  BUILT BY <a href="https://x.com/_smartie118" target="_blank">CITIZEN STRATEGY</a>
 </footer>
 
 <script>
@@ -1236,6 +1239,7 @@ fetchChain();
 (function(){
   const stage = document.getElementById('cope-anim-stage');
   if (!stage) return;
+  const overlay = document.getElementById('anim-overlay');
   const pool = document.getElementById('pool');
   const citizen = document.getElementById('citizen');
   const evader = document.getElementById('evader');
@@ -1289,7 +1293,7 @@ fetchChain();
   function clearAllDom(){
     pool.innerHTML=''; citizen.innerHTML=''; evader.innerHTML=''; gtDots.innerHTML='';
     copeDots.innerHTML=''; copeDots.style.opacity='0'; copeBarTrack.style.opacity='1'; copeBarFill.style.width='0%';
-    evaderFinalGrid.innerHTML=''; stage.querySelectorAll('.flow-dot').forEach(d=>d.remove());
+    evaderFinalGrid.innerHTML=''; stage.querySelectorAll('.flow-dot').forEach(d=>d.remove()); if(overlay) overlay.innerHTML='';
     citizenBox.style.opacity='1'; evaderBox.style.opacity='1'; gameTreasuryBox.style.opacity='1'; copeTreasuryBox.style.opacity='1';
   }
   function buildState(n){
@@ -1320,9 +1324,9 @@ fetchChain();
     const placeholder=targetContainer.querySelector('[data-used="false"]'); placeholder.dataset.used='true';
     const rect2=placeholder.getBoundingClientRect(); origSq.style.visibility='hidden';
     const ghost=document.createElement('div'); ghost.style.background=color; ghost.style.position='absolute';
-    ghost.style.width=rect1.width+'px'; ghost.style.height=rect1.height+'px';
+    ghost.style.width=rect1.width+'px'; ghost.style.height=rect1.height+'px'; ghost.style.zIndex='100';
     ghost.style.left=(rect1.left-stageRect.left)+'px'; ghost.style.top=(rect1.top-stageRect.top)+'px'; ghost.style.transition='none';
-    stage.appendChild(ghost);
+    overlay.appendChild(ghost);
     const dx=(rect2.left-stageRect.left)-(rect1.left-stageRect.left); const dy=(rect2.top-stageRect.top)-(rect1.top-stageRect.top);
     requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ ghost.style.transition=`transform ${duration}ms ease`; ghost.style.transform=`translate(${dx}px, ${dy}px)`; }); });
     setTimeout(()=>{ ghost.remove(); placeholder.style.opacity='1'; }, duration);
@@ -1345,7 +1349,7 @@ fetchChain();
     await new Promise(r=>setTimeout(r,MOVE_DUR)); compact(pool);
   }
   function centerOf(el, stageRect){ const r=el.getBoundingClientRect(); return { x:r.left+r.width/2-stageRect.left, y:r.top+r.height/2-stageRect.top }; }
-  function makeDot(color,size){ const d=document.createElement('div'); d.className='flow-dot'; d.style.position='absolute'; d.style.width=size+'px'; d.style.height=size+'px'; d.style.borderRadius='50%'; d.style.background=color; d.style.transition='none'; d.style.zIndex='5'; return d; }
+  function makeDot(color,size){ const d=document.createElement('div'); d.className='flow-dot'; d.style.position='absolute'; d.style.width=size+'px'; d.style.height=size+'px'; d.style.borderRadius='50%'; d.style.background=color; d.style.transition='none'; d.style.zIndex='100'; return d; }
   function placeDotXY(d,x,y,size){ d.style.left=(x-size/2)+'px'; d.style.top=(y-size/2)+'px'; }
   function flyDot(d,from,to,size,duration){ placeDotXY(d,from.x,from.y,size); requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ d.style.transition=`left ${duration}ms ease, top ${duration}ms ease`; placeDotXY(d,to.x,to.y,size); }); }); }
   function addRevealDot(square,color){ const dot=document.createElement('div'); dot.className='reveal-dot'; dot.style.position='absolute'; dot.style.width='7px'; dot.style.height='7px'; dot.style.borderRadius='50%'; dot.style.background=color; dot.style.left='50%'; dot.style.top='50%'; dot.style.transform='translate(-50%,-50%)'; dot.style.opacity='0'; dot.style.boxSizing='border-box'; dot.style.transition='opacity 0.2s ease, background 0.3s ease, border 0.3s ease'; square.appendChild(dot); return dot; }
@@ -1361,15 +1365,15 @@ fetchChain();
     for(let i=0;i<69;i++){ const d=document.createElement('div'); d.style.width='8px'; d.style.height='8px'; d.style.borderRadius='50%'; d.style.background=RED; gtDots.appendChild(d); staticRed.push(d); }
     await new Promise(r=>setTimeout(r,750));
     const stageRect=stage.getBoundingClientRect();
-    for(let i=0;i<69;i++){ const src=staticRed[i]; const sr=src.getBoundingClientRect(); const from={x:sr.left+sr.width/2-stageRect.left,y:sr.top+sr.height/2-stageRect.top}; src.remove(); const dest=centerOf(redTargets[i],stageRect); const clone=makeDot(RED,8); stage.appendChild(clone); flyDot(clone,from,dest,8,180); setTimeout(()=>{ clone.remove(); redReveals[i].style.opacity='1'; },190); await new Promise(r=>setTimeout(r,100)); }
+    for(let i=0;i<69;i++){ const src=staticRed[i]; const sr=src.getBoundingClientRect(); const from={x:sr.left+sr.width/2-stageRect.left,y:sr.top+sr.height/2-stageRect.top}; src.remove(); const dest=centerOf(redTargets[i],stageRect); const clone=makeDot(RED,8); overlay.appendChild(clone); flyDot(clone,from,dest,8,180); setTimeout(()=>{ clone.remove(); redReveals[i].style.opacity='1'; },190); await new Promise(r=>setTimeout(r,100)); }
     await new Promise(r=>setTimeout(r,250)); gameTreasuryBox.style.opacity='0.35';
     const yellowReveals=evaderSquares.map(sq=>addRevealDot(sq,YELLOW)); await new Promise(r=>setTimeout(r,400));
-    for(let i=0;i<45;i++){ const sq=citizenSquares[i]; const from=centerOf(sq,stageRect); const barR=copeBarTrack.getBoundingClientRect(); const to={x:barR.left+barR.width/2-stageRect.left,y:barR.top+barR.height/2-stageRect.top}; const clone=makeDot(YELLOW,8); stage.appendChild(clone); flyDot(clone,from,to,8,180); setTimeout(()=>{ clone.remove(); },190); const leftBehind=redDotMap.get(sq); if(leftBehind){ leftBehind.style.background='transparent'; leftBehind.style.border='2px solid '+RED; } await new Promise(r=>setTimeout(r,100)); copeBarFill.style.width=Math.round(((i+1)/45)*100)+'%'; }
+    for(let i=0;i<45;i++){ const sq=citizenSquares[i]; const from=centerOf(sq,stageRect); const barR=copeBarTrack.getBoundingClientRect(); const to={x:barR.left+barR.width/2-stageRect.left,y:barR.top+barR.height/2-stageRect.top}; const clone=makeDot(YELLOW,8); overlay.appendChild(clone); flyDot(clone,from,to,8,180); setTimeout(()=>{ clone.remove(); },190); const leftBehind=redDotMap.get(sq); if(leftBehind){ leftBehind.style.background='transparent'; leftBehind.style.border='2px solid '+RED; } await new Promise(r=>setTimeout(r,100)); copeBarFill.style.width=Math.round(((i+1)/45)*100)+'%'; }
     await new Promise(r=>setTimeout(r,400));
     copeBarTrack.style.opacity='0'; copeDots.style.opacity='1'; const staticYellow=[];
     for(let i=0;i<39;i++){ const d=document.createElement('div'); d.style.width='8px'; d.style.height='8px'; d.style.borderRadius='50%'; d.style.background=YELLOW; copeDots.appendChild(d); staticYellow.push(d); }
     await new Promise(r=>setTimeout(r,700));
-    for(let i=0;i<39;i++){ const src=staticYellow[i]; const sr=src.getBoundingClientRect(); const from={x:sr.left+sr.width/2-stageRect.left,y:sr.top+sr.height/2-stageRect.top}; src.remove(); const dest=centerOf(evaderSquares[i],stageRect); const clone=makeDot(YELLOW,8); stage.appendChild(clone); flyDot(clone,from,dest,8,180); setTimeout(()=>{ clone.remove(); yellowReveals[i].style.opacity='1'; },190); await new Promise(r=>setTimeout(r,100)); }
+    for(let i=0;i<39;i++){ const src=staticYellow[i]; const sr=src.getBoundingClientRect(); const from={x:sr.left+sr.width/2-stageRect.left,y:sr.top+sr.height/2-stageRect.top}; src.remove(); const dest=centerOf(evaderSquares[i],stageRect); const clone=makeDot(YELLOW,8); overlay.appendChild(clone); flyDot(clone,from,dest,8,180); setTimeout(()=>{ clone.remove(); yellowReveals[i].style.opacity='1'; },190); await new Promise(r=>setTimeout(r,100)); }
     copeTreasuryBox.style.opacity='0.35';
   }
   function flyElementTo(el, destContainer, duration){
