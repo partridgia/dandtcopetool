@@ -837,113 +837,64 @@ function selectVoteChoice(choice) {
   submitVote();
 }
 
-// ── Submit vote via Snapshot (native signing) ──
+// ── Submit vote via Snapshot (official SDK) ────
 async function submitVote() {
   const checked = Array.from(document.querySelectorAll('.token-checkbox:checked')).map(c => parseInt(c.value));
   if (!voteWalletAddress || !voteSelectedChoice || checked.length === 0) return;
   const msg = document.getElementById('vote-msg');
-  msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
+  msg.textContent = 'LOADING...';
 
   try {
-    const domain = { name: 'snapshot', version: '0.1.4' };
-
-    const types = {
-      Vote: [
-        { name: 'from',      type: 'address' },
-        { name: 'space',     type: 'string'  },
-        { name: 'timestamp', type: 'uint64'  },
-        { name: 'proposal',  type: 'bytes32' },
-        { name: 'choice',    type: 'uint32'  },
-        { name: 'reason',    type: 'string'  },
-        { name: 'app',       type: 'string'  },
-        { name: 'metadata',  type: 'string'  }
-      ]
-    };
-
-    const message = {
-      from:      voteWalletAddress,
-      space:     SNAPSHOT_SPACE,
-      timestamp: Math.floor(Date.now() / 1000),
-      proposal:  SNAPSHOT_PROPOSAL,
-      choice:    voteSelectedChoice,
-      reason:    '',
-      app:       'cope-tool',
-      metadata:  '{}'
-    };
-
-    const typedData = {
-      domain,
-      types: {
-        EIP712Domain: [
-          { name: 'name',    type: 'string' },
-          { name: 'version', type: 'string' }
-        ],
-        Vote: types.Vote
-      },
-      primaryType: 'Vote',
-      message
-    };
-
-    let sig;
-    try {
-      sig = await window.ethereum.request({
-        method: 'eth_signTypedData_v4',
-        params: [voteWalletAddress.toLowerCase(), JSON.stringify(typedData)]
+    // Load ethers 5.2 (the version snapshot.js is built against)
+    if (!window.ethers) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.ethers.io/lib/ethers-5.2.umd.min.js';
+        s.type = 'application/javascript';
+        s.onload = resolve; s.onerror = () => reject(new Error('Failed to load ethers'));
+        document.head.appendChild(s);
       });
-    } catch (signErr) {
-      // Surface the real signing error
-      const m = signErr?.message || JSON.stringify(signErr);
-      msg.textContent = '⚠ SIGN ERROR: ' + m.toUpperCase().slice(0, 80);
-      document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
-      voteSelectedChoice = null;
-      console.error('Signing failed:', signErr);
-      return;
+    }
+    // Load snapshot.js
+    if (!window.snapshot) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@snapshot-labs/snapshot.js';
+        s.onload = resolve; s.onerror = () => reject(new Error('Failed to load snapshot.js'));
+        document.head.appendChild(s);
+      });
     }
 
-    msg.textContent = 'SUBMITTING TO SNAPSHOT...';
+    const provider = new window.ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts', []);
+    const hub    = 'https://hub.snapshot.org';
+    const client = new window.snapshot.Client712(hub);
 
-    const envelope = {
-      address: voteWalletAddress,
-      sig,
-      data: {
-        domain,
-        types: {
-          EIP712Domain: [
-            { name: 'name',    type: 'string' },
-            { name: 'version', type: 'string' }
-          ],
-          Vote: types.Vote
-        },
-        message
-      }
-    };
+    msg.textContent = 'PLEASE SIGN IN YOUR WALLET...';
 
-    const submitRes = await fetch('https://seq.snapshot.org/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(envelope)
+    const receipt = await client.vote(provider, voteWalletAddress, {
+      space:    SNAPSHOT_SPACE,
+      proposal: SNAPSHOT_PROPOSAL,
+      type:     'single-choice',
+      choice:   voteSelectedChoice,
+      reason:   '',
+      app:      'cope-tool'
     });
 
-    const result = await submitRes.json();
-
-    if (submitRes.ok && result.id) {
+    if (receipt && (receipt.id || receipt.ipfs)) {
       msg.textContent = `✓ VOTE SUBMITTED — ${checked.length} CITIZEN${checked.length !== 1 ? 'S' : ''} VOTED.`;
       document.querySelectorAll('.vote-choice-btn').forEach(b => b.disabled = true);
       document.querySelectorAll('.token-checkbox').forEach(b => b.disabled = true);
       setTimeout(fetchVoteResults, 3000);
     } else {
-      const err = (result.error_description || result.error || JSON.stringify(result) || 'SUBMISSION FAILED');
-      msg.textContent = '⚠ ' + String(err).toUpperCase().slice(0, 100);
-      document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
-      voteSelectedChoice = null;
-      console.error('Snapshot rejected:', result);
+      throw new Error('No receipt returned');
     }
   } catch(e) {
-    const errText = e?.error?.message || e?.message || JSON.stringify(e) || 'VOTE FAILED';
-    msg.textContent = '⚠ ' + String(errText).toUpperCase().slice(0, 100);
+    const errText = e?.error?.message || e?.error_description || e?.message || JSON.stringify(e) || 'VOTE FAILED';
+    msg.textContent = '⚠ ' + String(errText).toUpperCase().slice(0, 120);
     document.querySelectorAll('.vote-choice-btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; });
     voteSelectedChoice = null;
-    console.error('submitVote error:', e);
+    console.error('Vote error:', e);
   }
 }
 
